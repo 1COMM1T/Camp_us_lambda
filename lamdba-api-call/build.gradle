@@ -35,7 +35,10 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     // aws sdk
-    implementation(platform("software.amazon.awssdk:bom:2.21.1"))
+//    implementation(platform("software.amazon.awssdk:bom:2.21.1"))
+
+    // aws lambda
+    implementation 'software.amazon.awssdk:lambda:2.20.58'
 
 }
 
