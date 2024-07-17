@@ -45,6 +45,9 @@ dependencies {
     implementation platform("org.springframework.cloud:spring-cloud-dependencies:2023.0.2")
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
+    // gson
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.11.0'
+
 }
 
 tasks.named('test') {

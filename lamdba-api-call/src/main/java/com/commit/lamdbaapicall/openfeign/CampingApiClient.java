@@ -10,7 +10,7 @@ import java.util.Map;
 @FeignClient(name = "CampingApiClient", url = "${gocamping.api.base-url}")
 public interface CampingApiClient {
     @RequestMapping(method = RequestMethod.GET, value = "/basedList")
-    List<CampingEntity> getBaseList(
+    String getBaseList(
             @RequestParam("numOfRows") int numOfRows,
             @RequestParam("pageNo") int pageNo,
             @RequestParam("MobileOS") String mobileOS,

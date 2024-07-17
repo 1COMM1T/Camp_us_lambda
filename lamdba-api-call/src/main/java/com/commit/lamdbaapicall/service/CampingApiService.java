@@ -5,10 +5,10 @@ import com.commit.lamdbaapicall.entity.CampingEntity;
 
 import java.util.List;
 
-public interface CampingApiCallService {
-    void fetchAndSaveCampingData();
+public interface CampingApiService {
+//    void fetchAndSaveCampingData();
     void saveToDatabase(List<CampingEntity> campingData);
 
-    List<CampingEntity> fetchAndSaveCampingData2();
+    List<CampingDTO> fetchAndSaveCampingData2();
 
 }
