@@ -42,7 +42,7 @@ dependencies {
     implementation 'software.amazon.awssdk:lambda:2.20.58'
 
     // openFeign
-    implementation platform("org.springframework.cloud:spring-cloud-dependencies:2022.0.2")
+    implementation platform("org.springframework.cloud:spring-cloud-dependencies:2023.0.2")
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 }

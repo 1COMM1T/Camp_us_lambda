@@ -1,11 +1,11 @@
 package com.commit.lamdbaapicall.service;
 
-import com.commit.lamdbaapicall.dto.CampingDTO;
 import com.commit.lamdbaapicall.entity.CampingEntity;
 import com.commit.lamdbaapicall.openfeign.CampingApiClient;
 import com.commit.lamdbaapicall.repository.CampingRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -19,6 +19,15 @@ public class CampingApiCallServiceImpl implements CampingApiCallService {
     private final CampingRepository campingRepository;
     private final CampingApiClient campingApiClient;
 
+    @Value("${gocamping.api.decoding-key}")
+    private String serviceKey;
+
+    private static final int NUM_OF_ROWS = 0;
+    private static final int PAGE_NO = 0;
+    private static final String MOBILE_OS = "WIN";
+    private static final String MOBILE_APP = "campus";
+    private static final String TYPE = "json";
+
     @Autowired
     public CampingApiCallServiceImpl(
             CampingRepository campingRepository,
@@ -31,9 +40,19 @@ public class CampingApiCallServiceImpl implements CampingApiCallService {
 //    @Scheduled(cron = "${schedule.cron}")
     public void fetchAndSaveCampingData() {
         Map<String, Object> params = setApiCallParameter();
-        List<CampingEntity> campingData = campingApiClient.getBaseList(params);
+        List<CampingEntity> campingData = campingApiClient.getBaseList(NUM_OF_ROWS, PAGE_NO, MOBILE_OS, MOBILE_APP, serviceKey, TYPE);
 
+
+//        System.out.println("campingData: " + campingData);
         log.info("campingData: " + campingData);
+    }
+
+    @Override
+    public List<CampingEntity> fetchAndSaveCampingData2() {
+        Map<String, Object> params = setApiCallParameter();
+        List<CampingEntity> campingData = campingApiClient.getBaseList(NUM_OF_ROWS, PAGE_NO, MOBILE_OS, MOBILE_APP, serviceKey, TYPE);
+
+        return campingData;
     }
 
     public Map<String, Object> setApiCallParameter() {
@@ -43,8 +62,8 @@ public class CampingApiCallServiceImpl implements CampingApiCallService {
         params.put("pageNo", 0);
         params.put("mobileOS", "WINS"); // OS 구분 : IOS (아이폰), AND (안드로이드), WIN (윈도우폰), ETC(기타)
         params.put("mobileApp", "campus");  // 서비스 명
-        params.put("serviceKey", "Au/sJXmqYwNOJf1Wq3qbzEo6OzW4p5KALPI2/nvXgdZWHiHm5jTl2dMdr/R75gxHwTuOeH7pVCOUkUfg4c/kZQ==");
-        params.put("type", "_json");
+        params.put("serviceKey", "${gocamping.api.decoding-key}");
+        params.put("type", "json");
 
         return params;
     }

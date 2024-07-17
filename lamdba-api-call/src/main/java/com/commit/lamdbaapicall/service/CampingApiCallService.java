@@ -8,4 +8,7 @@ import java.util.List;
 public interface CampingApiCallService {
     void fetchAndSaveCampingData();
     void saveToDatabase(List<CampingEntity> campingData);
+
+    List<CampingEntity> fetchAndSaveCampingData2();
+
 }
