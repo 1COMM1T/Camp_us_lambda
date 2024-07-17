@@ -1,22 +1,18 @@
 package com.commit.lamdbaapicall.openfeign;
 
-import com.commit.lamdbaapicall.dto.CampingDTO;
+import com.commit.lamdbaapicall.entity.CampingEntity;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 
-@FeignClient(name = "CampingApiClient", url = "${gocamping.api.base-url}")
+@Component
+//@FeignClient(name = "CampingApiClient", url = "${gocamping.api.base-url}")
+@FeignClient(name = "CampingApiClient", url = "http://apis.data.go.kr/B551011/GoCamping")
 public interface CampingApiClient {
     @GetMapping("/baselist")
-    List<CampingDTO> getBaseList(
-            @RequestParam("numOfRows") int numOfRows,
-            @RequestParam("pageNo") int pageNo,
-            @RequestParam("MobileOS") String mobileOS,
-            @RequestParam("MobileApp") String mobileApp,
-            @RequestParam("serviceKey") String serviceKey,
-            @RequestParam("_type") String type
-    );
+    List<CampingEntity> getBaseList(Map<String, Object> params);
 
 }

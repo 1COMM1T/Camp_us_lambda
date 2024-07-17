@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 @EnableScheduling
 @SpringBootApplication
+@EnableFeignClients
 public class LamdbaApiCallApplication {
 
     public static void main(String[] args) {

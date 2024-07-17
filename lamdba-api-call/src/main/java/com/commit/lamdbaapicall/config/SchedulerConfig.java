@@ -11,17 +11,17 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class SchedulerConfig {
 
-    private final LambdaAPICallService lambdaAPICallService;
+//    private final LambdaAPICallService lambdaAPICallService;
+//
+//    @Autowired
+//    public SchedulerConfig(LambdaAPICallService lambdaAPICallService) {
+//        this.lambdaAPICallService = lambdaAPICallService;
+//    }
 
-    @Autowired
-    public SchedulerConfig(LambdaAPICallService lambdaAPICallService) {
-        this.lambdaAPICallService = lambdaAPICallService;
-    }
-
-    @Scheduled(cron = "${schedule.cron}")
-    public void scheduledTask() {
-        String functionName = "gocamping-api-call";
-        String payload = "{}";
-        lambdaAPICallService.invokeLambda(functionName, payload);
-    }
+//    @Scheduled(cron = "${schedule.cron}")
+//    public void scheduledTask() {
+//        String functionName = "gocamping-api-call";
+//        String payload = "{}";
+//        lambdaAPICallService.invokeLambda(functionName, payload);
+//    }
 }
