@@ -39,33 +39,20 @@ public class CampingApiCallServiceImpl implements CampingApiCallService {
     @Override
 //    @Scheduled(cron = "${schedule.cron}")
     public void fetchAndSaveCampingData() {
-        Map<String, Object> params = setApiCallParameter();
-        List<CampingEntity> campingData = campingApiClient.getBaseList(NUM_OF_ROWS, PAGE_NO, MOBILE_OS, MOBILE_APP, serviceKey, TYPE);
-
-
-//        System.out.println("campingData: " + campingData);
-        log.info("campingData: " + campingData);
+        List<CampingEntity> campingData =
+                campingApiClient.getBaseList(
+                        NUM_OF_ROWS, PAGE_NO, MOBILE_OS, MOBILE_APP, serviceKey, TYPE
+                );
     }
 
     @Override
     public List<CampingEntity> fetchAndSaveCampingData2() {
-        Map<String, Object> params = setApiCallParameter();
-        List<CampingEntity> campingData = campingApiClient.getBaseList(NUM_OF_ROWS, PAGE_NO, MOBILE_OS, MOBILE_APP, serviceKey, TYPE);
+        List<CampingEntity> campingData =
+                campingApiClient.getBaseList(
+                        NUM_OF_ROWS, PAGE_NO, MOBILE_OS, MOBILE_APP, serviceKey, TYPE
+                );
 
         return campingData;
-    }
-
-    public Map<String, Object> setApiCallParameter() {
-
-        Map<String, Object> params = new HashMap<>();
-        params.put("numOfRows", 0);
-        params.put("pageNo", 0);
-        params.put("mobileOS", "WINS"); // OS 구분 : IOS (아이폰), AND (안드로이드), WIN (윈도우폰), ETC(기타)
-        params.put("mobileApp", "campus");  // 서비스 명
-        params.put("serviceKey", "${gocamping.api.decoding-key}");
-        params.put("type", "json");
-
-        return params;
     }
 
     @Override
