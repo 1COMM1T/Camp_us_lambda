@@ -27,6 +27,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -39,6 +40,10 @@ dependencies {
 
     // aws lambda
     implementation 'software.amazon.awssdk:lambda:2.20.58'
+
+    // openFeign
+    implementation platform("org.springframework.cloud:spring-cloud-dependencies:2022.0.2")
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 
 }
 
