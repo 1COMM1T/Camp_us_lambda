@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -51,17 +52,13 @@ public class CampingApiServiceImpl implements CampingApiService {
         String campingData = callCampingApi();
 
         try {
-            // Json 루트 객체를 읽어들인다.
             JsonNode rootNode = objectMapper.readTree(campingData);
-            // "response" -> "body" -> "items" -> "item" 노드를 찾는다.
             JsonNode itemsNode = rootNode.path("response").path("body").path("items").path("item");
 
-            // itemsNode를 List<CampingDTO>로 역직렬화한다.
             List<CampingDTO> campingDTOList = objectMapper.readValue(
                     itemsNode.toString(), new TypeReference<List<CampingDTO>>() {});
 
-            // DTO 리스트를 로그에 출력한다.
-            campingDTOList.forEach(dto -> log.info("Camping DTO: {}", dto));
+            campingDTOList.forEach(dto -> log.info("CampingDTO: {}", dto));
 
             return campingDTOList;
 
@@ -71,9 +68,32 @@ public class CampingApiServiceImpl implements CampingApiService {
         }
     }
 
+    private CampingEntity convertToEntity(CampingDTO campingDTO) {
+        return CampingEntity.builder()
+                .campId(campingDTO.getCampId())
+                .facltNm(campingDTO.getFacltNm())
+                .lineIntro(campingDTO.getLineIntro())
+                .intro(campingDTO.getIntro())
+                .doNm(campingDTO.getDoNm())
+                .sigunguNm(campingDTO.getSigunguNm())
+                .zipcode(campingDTO.getZipcode())
+                .featureNm(campingDTO.getFeatureNm())
+                .induty(campingDTO.getInduty())
+                .addr1(campingDTO.getAddr1())
+                .addr2(campingDTO.getAddr2())
+                .mapX(campingDTO.getMapX())
+                .mapY(campingDTO.getMapY())
+                .tel(campingDTO.getTel())
+                .homepage(campingDTO.getHomepage())
+                .manageNmpr(campingDTO.getManageNmpr())
+                .build();
+    }
 
     @Override
-    public void saveToDatabase(List<CampingEntity> campingData) {
-        // 구현 필요
+    public void saveToDatabase(List<CampingDTO> campingDTOList) {
+        List<CampingEntity> campingEntityList = campingDTOList.stream()
+                .map(this::convertToEntity)
+                .collect(Collectors.toList());
+        campingRepository.saveAll(campingEntityList);
     }
 }
