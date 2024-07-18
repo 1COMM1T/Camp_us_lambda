@@ -20,7 +20,14 @@ public class TestController {
 
     @GetMapping("/test")
     public List<CampingDTO> test() {
-        List<CampingDTO> campingData = campingApiService.fetchAndSaveCampingData2();
+        List<CampingDTO> campingData = campingApiService.fetchCampingData();
+
+        return campingData;
+    }
+
+    @GetMapping("/call")
+    public String call() {
+        String campingData = campingApiService.callCampingApi();
 
         return campingData;
     }
