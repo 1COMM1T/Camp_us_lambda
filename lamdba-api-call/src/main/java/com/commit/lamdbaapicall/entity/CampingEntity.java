@@ -16,34 +16,34 @@ public class CampingEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int campId;
 
-    @Column(name = "camp_name")
+    @Column(name = "camp_name", length = 100)
     private String campName;
 
-    @Column(name = "line_intro")
+    @Column(name = "line_intro", length = 255)
     private String lineIntro;
 
     @Column(name = "intro", columnDefinition = "TEXT")
     private String intro;
 
-    @Column(name = "province_name")
+    @Column(name = "province_name", length = 50)
     private String provinceName;
 
-    @Column(name = "district_name")
+    @Column(name = "district_name", length = 50)
     private String districtName;
 
-    @Column(name = "post_code")
+    @Column(name = "post_code", length = 10)
     private String postCode;
 
     @Column(name = "feature_summary", columnDefinition = "TEXT")
     private String featureSummary;
 
-    @Column(name = "induty")
+    @Column(name = "induty", length = 50)
     private String induty;
 
-    @Column(name = "addr")
+    @Column(name = "addr", length = 100)
     private String addr;
 
-    @Column(name = "addr_details")
+    @Column(name = "addr_details", length = 100)
     private String addrDetails;
 
     @Column(name = "mapX")
@@ -52,7 +52,7 @@ public class CampingEntity {
     @Column(name = "mapY")
     private double mapY;
 
-    @Column(name = "tel")
+    @Column(name = "tel", length = 50)
     private String tel;
 
     @Column(name = "homepage")
