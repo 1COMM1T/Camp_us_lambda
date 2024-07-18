@@ -9,5 +9,5 @@ public interface CampingApiService {
     String callCampingApi();
     List<CampingDTO> parseJsonToDTOList();
     CampingEntity convertDTOToEntity(CampingDTO campingDTO);
-    void saveToDatabase(List<CampingDTO> campingDTOList);
+    List<CampingEntity> saveToDatabase(List<CampingDTO> campingDTOList);
 }

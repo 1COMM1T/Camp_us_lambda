@@ -27,7 +27,7 @@ public class CampingApiServiceImpl implements CampingApiService {
     @Value("${gocamping.api.encoding-key}")
     private String serviceKey;
 
-    private static final int NUM_OF_ROWS = 5000;
+    private static final int NUM_OF_ROWS = 1000;
     private static final int PAGE_NO = 0;
     private static final String MOBILE_OS = "WIN";
     private static final String MOBILE_APP = "campus";
@@ -72,7 +72,7 @@ public class CampingApiServiceImpl implements CampingApiService {
 
     @Override
     public CampingEntity convertDTOToEntity(CampingDTO campingDTO) {
-        return CampingEntity.builder()
+        CampingEntity campingEntity = CampingEntity.builder()
                 .facltNm(campingDTO.getFacltNm())
                 .lineIntro(campingDTO.getLineIntro())
                 .intro(campingDTO.getIntro())
@@ -89,10 +89,14 @@ public class CampingApiServiceImpl implements CampingApiService {
                 .homepage(campingDTO.getHomepage())
                 .manageNmpr(campingDTO.getManageNmpr())
                 .build();
+
+        log.info("campingEntity: {}", campingEntity);
+
+        return campingEntity;
     }
 
     @Override
-    public void saveToDatabase(List<CampingDTO> campingDTOList) {
+    public List<CampingEntity> saveToDatabase(List<CampingDTO> campingDTOList) {
 
         List<CampingEntity> campingEntityList = campingDTOList.stream()
                 .map(this::convertDTOToEntity)
@@ -101,7 +105,14 @@ public class CampingApiServiceImpl implements CampingApiService {
         // CampingEntity 리스트를 로그로 출력
         campingEntityList.forEach(entity -> log.info("Saving CampingEntity: {}", entity));
 
+        log.info("====== ======= ======");
+
         // 데이터베이스에 저장
         campingRepository.saveAll(campingEntityList);
+
+        List<CampingEntity> savedEntities = campingRepository.findAll();
+        savedEntities.forEach(campingEntity -> log.info("저장된 엔티티 출력: {}", campingEntity));
+
+        return campingEntityList;
     }
 }
