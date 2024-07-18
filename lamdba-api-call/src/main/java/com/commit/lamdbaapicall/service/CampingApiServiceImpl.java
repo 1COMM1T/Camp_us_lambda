@@ -24,7 +24,7 @@ public class CampingApiServiceImpl implements CampingApiService {
     private final CampingApiClient campingApiClient;
     private final ObjectMapper objectMapper;
 
-    @Value("${gocamping.api.decoding-key}")
+    @Value("${gocamping.api.encoding-key}")
     private String serviceKey;
 
     private static final int NUM_OF_ROWS = 5000;
@@ -44,7 +44,9 @@ public class CampingApiServiceImpl implements CampingApiService {
 
     @Override
     public String callCampingApi() {
-        return campingApiClient.getBaseList(NUM_OF_ROWS, PAGE_NO, MOBILE_OS, MOBILE_APP, serviceKey, TYPE);
+        String responseJson = campingApiClient.getBaseList(NUM_OF_ROWS, PAGE_NO, MOBILE_OS, MOBILE_APP, serviceKey, TYPE);;
+        log.info("responseJson: {}", responseJson);
+        return responseJson;
     }
 
     @Override
@@ -91,9 +93,6 @@ public class CampingApiServiceImpl implements CampingApiService {
 
     @Override
     public void saveToDatabase(List<CampingDTO> campingDTOList) {
-//        List<CampingEntity> campingEntityList = campingDTOList.stream()
-//                .map(this::convertDTOToEntity)
-//                .collect(Collectors.toList());
 
         List<CampingEntity> campingEntityList = campingDTOList.stream()
                 .map(this::convertDTOToEntity)

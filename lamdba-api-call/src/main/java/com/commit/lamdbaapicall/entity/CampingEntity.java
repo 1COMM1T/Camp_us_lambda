@@ -18,13 +18,13 @@ public class CampingEntity {
     private String facltNm;
     private String lineIntro;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String intro;
     private String doNm;
     private String sigunguNm;
     private String zipcode;
 
-    @Column(columnDefinition = "LONGTEXT")
+    @Column(name="featureNm", columnDefinition = "TEXT")
     private String featureNm;
     private String induty;
     private String addr1;
@@ -37,7 +37,9 @@ public class CampingEntity {
 
     @Builder
     public CampingEntity(String facltNm, String lineIntro, String intro, String doNm,
-                         String sigunguNm, String zipcode, String featureNm, String induty,
+                         String sigunguNm, String zipcode,
+                         String featureNm,
+                         String induty,
                          String addr1, String addr2, double mapX, double mapY, String tel,
                          String homepage, int manageNmpr) {
         this.facltNm = facltNm;

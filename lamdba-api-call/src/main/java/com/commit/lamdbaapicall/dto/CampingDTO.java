@@ -28,7 +28,9 @@ public class CampingDTO {
     @Builder
     public CampingDTO(int campId, String facltNm, String lineIntro,
                       String intro, String doNm, String sigunguNm,
-                      String zipcode, String featureNm, String induty,
+                      String zipcode,
+                      String featureNm,
+                      String induty,
                       String addr1, String addr2, double mapX,
                       double mapY, String tel, String homepage, int manageNmpr)
     {
