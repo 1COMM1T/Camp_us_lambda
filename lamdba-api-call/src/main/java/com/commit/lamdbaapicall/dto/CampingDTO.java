@@ -1,8 +1,12 @@
 package com.commit.lamdbaapicall.dto;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
+@Getter
+@NoArgsConstructor
 public class CampingDTO {
     private int campId;         // 캠핑장 ID
     private String facltNm;      // 야영장명
@@ -20,4 +24,29 @@ public class CampingDTO {
     private String tel;         // 전화
     private String homepage;    // 홈페이지
     private int manageNmpr;     // 상주관리인원
+
+    @Builder
+    public CampingDTO(int campId, String facltNm, String lineIntro,
+                      String intro, String doNm, String sigunguNm,
+                      String zipcode, String featureNm, String induty,
+                      String addr1, String addr2, double mapX,
+                      double mapY, String tel, String homepage, int manageNmpr)
+    {
+        this.campId = campId;
+        this.facltNm = facltNm;
+        this.lineIntro = lineIntro;
+        this.intro = intro;
+        this.doNm = doNm;
+        this.sigunguNm = sigunguNm;
+        this.zipcode = zipcode;
+        this.featureNm = featureNm;
+        this.induty = induty;
+        this.addr1 = addr1;
+        this.addr2 = addr2;
+        this.mapX = mapX;
+        this.mapY = mapY;
+        this.tel = tel;
+        this.homepage = homepage;
+        this.manageNmpr = manageNmpr;
+    }
 }

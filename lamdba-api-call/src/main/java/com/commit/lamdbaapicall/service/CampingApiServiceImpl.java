@@ -12,10 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,6 +27,8 @@ public class CampingApiServiceImpl implements CampingApiService {
     @Value("${gocamping.api.decoding-key}")
     private String serviceKey;
 
+    // 이 상수들을 따로 관리하는 방법 있는지 찾아보기
+    // 상수로 선언해서 사용하는 이유 찾아보기
     private static final int NUM_OF_ROWS = 5000;
     private static final int PAGE_NO = 0;
     private static final String MOBILE_OS = "WIN";
@@ -59,10 +59,7 @@ public class CampingApiServiceImpl implements CampingApiService {
                         NUM_OF_ROWS, PAGE_NO, MOBILE_OS, MOBILE_APP, serviceKey, TYPE
                 );
 
-        List<CampingDTO> parsedCampingData = parseCampingDTOList(campingData);
-
-        int count = parsedCampingData.size();
-        log.info(String.valueOf(count));
+        List<CampingDTO> parsedCampingData = new ArrayList<>();
 
         return parsedCampingData;
     }
@@ -70,20 +67,6 @@ public class CampingApiServiceImpl implements CampingApiService {
     @Override
     public void saveToDatabase(List<CampingEntity> campingData) {
 
-    }
-
-    private List<CampingDTO> parseCampingDTOList(String responseBody) {
-        Gson gson = new Gson();
-        Type responseType = new TypeToken<CampingApiResponse>() {
-        }.getType();
-        CampingApiResponse apiResponse = gson.fromJson(responseBody, responseType);
-
-        if (apiResponse != null
-                && apiResponse.getResponse() != null
-                && apiResponse.getResponse().getBody() != null) {
-            return apiResponse.getResponse().getBody().getItems().getItem();
-        }
-        return Collections.emptyList();
     }
 }
 
