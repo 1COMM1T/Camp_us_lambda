@@ -48,7 +48,7 @@ public class CampingApiServiceImpl implements CampingApiService {
     }
 
     @Override
-    public List<CampingDTO> fetchCampingData() {
+    public List<CampingDTO> parseJsonToDTOList() {
         String campingData = callCampingApi();
 
         try {
@@ -68,9 +68,9 @@ public class CampingApiServiceImpl implements CampingApiService {
         }
     }
 
-    private CampingEntity convertToEntity(CampingDTO campingDTO) {
+    @Override
+    public CampingEntity convertDTOToEntity(CampingDTO campingDTO) {
         return CampingEntity.builder()
-                .campId(campingDTO.getCampId())
                 .facltNm(campingDTO.getFacltNm())
                 .lineIntro(campingDTO.getLineIntro())
                 .intro(campingDTO.getIntro())
@@ -91,9 +91,18 @@ public class CampingApiServiceImpl implements CampingApiService {
 
     @Override
     public void saveToDatabase(List<CampingDTO> campingDTOList) {
+//        List<CampingEntity> campingEntityList = campingDTOList.stream()
+//                .map(this::convertDTOToEntity)
+//                .collect(Collectors.toList());
+
         List<CampingEntity> campingEntityList = campingDTOList.stream()
-                .map(this::convertToEntity)
+                .map(this::convertDTOToEntity)
                 .collect(Collectors.toList());
+
+        // CampingEntity 리스트를 로그로 출력
+        campingEntityList.forEach(entity -> log.info("Saving CampingEntity: {}", entity));
+
+        // 데이터베이스에 저장
         campingRepository.saveAll(campingEntityList);
     }
 }

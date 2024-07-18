@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,9 +19,9 @@ public class TestController {
         this.campingApiService = campingApiService;
     }
 
-    @GetMapping("/test")
+    @GetMapping("/parse")
     public List<CampingDTO> test() {
-        List<CampingDTO> campingData = campingApiService.fetchCampingData();
+        List<CampingDTO> campingData = campingApiService.parseJsonToDTOList();
 
         return campingData;
     }
@@ -30,5 +31,14 @@ public class TestController {
         String campingData = campingApiService.callCampingApi();
 
         return campingData;
+    }
+
+    @GetMapping("/save")
+    public String saveData() {
+        List<CampingDTO> campingData = campingApiService.parseJsonToDTOList();
+
+        campingApiService.saveToDatabase(campingData);
+
+        return "실행됨";
     }
 }

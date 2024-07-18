@@ -6,8 +6,8 @@ import com.commit.lamdbaapicall.entity.CampingEntity;
 import java.util.List;
 
 public interface CampingApiService {
-    void saveToDatabase(List<CampingDTO> campingDTOList);
     String callCampingApi();
-    List<CampingDTO> fetchCampingData();
-
+    List<CampingDTO> parseJsonToDTOList();
+    CampingEntity convertDTOToEntity(CampingDTO campingDTO);
+    void saveToDatabase(List<CampingDTO> campingDTOList);
 }
