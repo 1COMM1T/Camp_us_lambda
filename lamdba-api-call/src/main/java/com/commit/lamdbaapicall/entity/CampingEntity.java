@@ -15,20 +15,50 @@ public class CampingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int campId;
+
+    @Column(name = "camp_name")
     private String campName;
+
+    @Column(name = "line_intro")
     private String lineIntro;
+
+    @Column(name = "intro", columnDefinition = "TEXT")
     private String intro;
+
+    @Column(name = "province_name")
     private String provinceName;
+
+    @Column(name = "district_name")
     private String districtName;
+
+    @Column(name = "post_code")
     private String postCode;
+
+    @Column(name = "feature_summary", columnDefinition = "TEXT")
     private String featureSummary;
+
+    @Column(name = "induty")
     private String induty;
+
+    @Column(name = "addr")
     private String addr;
+
+    @Column(name = "addr_details")
     private String addrDetails;
+
+    @Column(name = "mapX")
     private double mapX;
+
+    @Column(name = "mapY")
     private double mapY;
+
+    @Column(name = "tel")
     private String tel;
+
+    @Column(name = "homepage")
     private String homepage;
+
+    @Column(name = "staff_count")
     private int staffCount;
 
     @Builder
