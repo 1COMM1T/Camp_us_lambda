@@ -73,21 +73,21 @@ public class CampingApiServiceImpl implements CampingApiService {
     @Override
     public CampingEntity convertDTOToEntity(CampingDTO campingDTO) {
         CampingEntity campingEntity = CampingEntity.builder()
-                .facltNm(campingDTO.getFacltNm())
+                .campName(campingDTO.getCampName())
                 .lineIntro(campingDTO.getLineIntro())
                 .intro(campingDTO.getIntro())
-                .doNm(campingDTO.getDoNm())
-                .sigunguNm(campingDTO.getSigunguNm())
-                .zipcode(campingDTO.getZipcode())
-                .featureNm(campingDTO.getFeatureNm())
+                .provinceName(campingDTO.getProvinceName())
+                .districtName(campingDTO.getDistrictName())
+                .postCode(campingDTO.getPostCode())
+                .featureSummary(campingDTO.getFeatureSummary())
                 .induty(campingDTO.getInduty())
-                .addr1(campingDTO.getAddr1())
-                .addr2(campingDTO.getAddr2())
+                .addr(campingDTO.getAddr())
+                .addrDetails(campingDTO.getAddrDetails())
                 .mapX(campingDTO.getMapX())
                 .mapY(campingDTO.getMapY())
                 .tel(campingDTO.getTel())
                 .homepage(campingDTO.getHomepage())
-                .manageNmpr(campingDTO.getManageNmpr())
+                .staffCount(campingDTO.getStaffCount())
                 .build();
 
         log.info("campingEntity: {}", campingEntity);

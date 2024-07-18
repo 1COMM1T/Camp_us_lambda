@@ -9,46 +9,46 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CampingDTO {
     private int campId;         // 캠핑장 ID
-    private String facltNm;      // 야영장명
+    private String campName;      // 야영장명
     private String lineIntro;   // 한줄소개
     private String intro;       // 소개
-    private String doNm;        // 도
-    private String sigunguNm;   // 시군구
-    private String zipcode;     // 우편번호
-    private String featureNm;   // 특징명
+    private String provinceName;        // 도
+    private String districtName;   // 시군구
+    private String postCode;     // 우편번호
+    private String featureSummary;   // 특징명
     private String induty;      // 업종
-    private String addr1;       // 주소
-    private String addr2;       // 주소 상세
+    private String addr;       // 주소
+    private String addrDetails;       // 주소 상세
     private double mapX;        // 경도
     private double mapY;        // 위도
     private String tel;         // 전화
     private String homepage;    // 홈페이지
-    private int manageNmpr;     // 상주관리인원
+    private int staffCount;     // 상주관리인원
 
     @Builder
-    public CampingDTO(int campId, String facltNm, String lineIntro,
-                      String intro, String doNm, String sigunguNm,
-                      String zipcode,
-                      String featureNm,
+    public CampingDTO(int campId, String campName, String lineIntro,
+                      String intro, String provinceName, String districtName,
+                      String postCode,
+                      String featureSummary,
                       String induty,
-                      String addr1, String addr2, double mapX,
-                      double mapY, String tel, String homepage, int manageNmpr)
+                      String addr, String addrDetails, double mapX,
+                      double mapY, String tel, String homepage, int staffCount)
     {
         this.campId = campId;
-        this.facltNm = facltNm;
+        this.campName = campName;
         this.lineIntro = lineIntro;
         this.intro = intro;
-        this.doNm = doNm;
-        this.sigunguNm = sigunguNm;
-        this.zipcode = zipcode;
-        this.featureNm = featureNm;
+        this.provinceName = provinceName;
+        this.districtName = districtName;
+        this.postCode = postCode;
+        this.featureSummary = featureSummary;
         this.induty = induty;
-        this.addr1 = addr1;
-        this.addr2 = addr2;
+        this.addr = addr;
+        this.addrDetails = addrDetails;
         this.mapX = mapX;
         this.mapY = mapY;
         this.tel = tel;
         this.homepage = homepage;
-        this.manageNmpr = manageNmpr;
+        this.staffCount = staffCount;
     }
 }
