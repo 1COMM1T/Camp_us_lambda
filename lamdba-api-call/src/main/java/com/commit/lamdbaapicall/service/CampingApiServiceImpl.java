@@ -72,25 +72,25 @@ public class CampingApiServiceImpl implements CampingApiService {
 
     @Override
     public CampingEntity convertDTOToEntity(CampingDTO campingDTO) {
-        CampingEntity campingEntity = CampingEntity.builder()
-                .campName(campingDTO.getCampName())
-                .lineIntro(campingDTO.getLineIntro())
-                .intro(campingDTO.getIntro())
-                .provinceName(campingDTO.getProvinceName())
-                .districtName(campingDTO.getDistrictName())
-                .postCode(campingDTO.getPostCode())
-                .featureSummary(campingDTO.getFeatureSummary())
-                .induty(campingDTO.getInduty())
-                .addr(campingDTO.getAddr())
-                .addrDetails(campingDTO.getAddrDetails())
-                .mapX(campingDTO.getMapX())
-                .mapY(campingDTO.getMapY())
-                .tel(campingDTO.getTel())
-                .homepage(campingDTO.getHomepage())
-                .staffCount(campingDTO.getStaffCount())
-                .build();
+        CampingEntity campingEntity = new CampingEntity();
 
-        log.info("campingEntity: {}", campingEntity);
+        campingEntity.setCampName(campingDTO.getCampName());
+        campingEntity.setLineIntro(campingDTO.getLineIntro());
+        campingEntity.setIntro(campingDTO.getIntro());
+        campingEntity.setDoName(campingDTO.getDoName());
+        campingEntity.setSigunguName(campingDTO.getSigunguName());
+        campingEntity.setPostCode(campingDTO.getPostCode());
+        campingEntity.setFeatureSummary(campingDTO.getFeatureSummary());
+        campingEntity.setInduty(campingDTO.getInduty());
+        campingEntity.setAddr(campingDTO.getAddr());
+        campingEntity.setAddr(campingDTO.getAddrDetails());
+        campingEntity.setMapX(campingDTO.getMapX());
+        campingEntity.setMapX(campingDTO.getMapY());
+        campingEntity.setTel(campingDTO.getTel());
+        campingEntity.setHomepage(campingDTO.getHomepage());
+        campingEntity.setStaffCount(campingDTO.getStaffCount());
+        campingEntity.setCreatedDate(campingDTO.getCreatedDate());
+        campingEntity.setLastModifiedDate(campingDTO.getModifiedDate());
 
         return campingEntity;
     }

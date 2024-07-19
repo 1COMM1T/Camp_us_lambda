@@ -1,20 +1,26 @@
 package com.commit.lamdbaapicall.entity;
 
 import jakarta.persistence.*;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import org.springframework.stereotype.Service;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "camping")
-@Getter    // 왜 쓰는지 알아보기
+@Getter
+@Setter
+@Service
 @ToString  // 왜 쓰는지 알아보기
 @NoArgsConstructor // 왜 쓰는지 알아보기
-public class CampingEntity {
+public class CampingEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int campId;
+    private long campId;
 
     @Column(name = "camp_name", length = 100)
     private String campName;
@@ -22,19 +28,19 @@ public class CampingEntity {
     @Column(name = "line_intro", length = 255)
     private String lineIntro;
 
-    @Column(name = "intro", columnDefinition = "TEXT")
+    @Column(name = "intro", columnDefinition = "MEDIUMTEXT")
     private String intro;
 
     @Column(name = "province_name", length = 50)
-    private String provinceName;
+    private String doName;
 
     @Column(name = "district_name", length = 50)
-    private String districtName;
+    private String sigunguName;
 
     @Column(name = "post_code", length = 10)
     private String postCode;
 
-    @Column(name = "feature_summary", columnDefinition = "TEXT")
+    @Column(name = "feature_summary", columnDefinition = "MEDIUMTEXT")
     private String featureSummary;
 
     @Column(name = "induty", length = 50)
@@ -61,27 +67,10 @@ public class CampingEntity {
     @Column(name = "staff_count")
     private int staffCount;
 
-    @Builder
-    public CampingEntity(String campName, String lineIntro, String intro, String provinceName,
-                         String districtName, String postCode,
-                         String featureSummary,
-                         String induty,
-                         String addr, String addrDetails, double mapX, double mapY, String tel,
-                         String homepage, int staffCount) {
-        this.campName = campName;
-        this.lineIntro = lineIntro;
-        this.intro = intro;
-        this.provinceName = provinceName;
-        this.districtName = districtName;
-        this.postCode = postCode;
-        this.featureSummary = featureSummary;
-        this.induty = induty;
-        this.addr = addr;
-        this.addrDetails = addrDetails;
-        this.mapX = mapX;
-        this.mapY = mapY;
-        this.tel = tel;
-        this.homepage = homepage;
-        this.staffCount = staffCount;
-    }
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
+    @Column(name = "last_modified_date")
+    private LocalDateTime lastModifiedDate;
+
 }

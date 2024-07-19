@@ -1,12 +1,17 @@
 package com.commit.lamdbaapicall.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.LocalDateTime;
+
 
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class CampingDTO {
     private int campId;         // 캠핑장 ID
@@ -21,10 +26,10 @@ public class CampingDTO {
     private String intro;  // 소개
 
     @JsonProperty("doNm")
-    private String provinceName;  // 도
+    private String doName;  // 도
 
     @JsonProperty("sigunguNm")
-    private String districtName;  // 시군구
+    private String sigunguName;  // 시군구
 
     @JsonProperty("zipcode")
     private String postCode;  // 우편번호
@@ -56,30 +61,9 @@ public class CampingDTO {
     @JsonProperty("manageNmpr")
     private int staffCount;  // 상주관리인원
 
+    @JsonProperty("createdtime")
+    private LocalDateTime createdDate;  // 등록일
 
-    @Builder
-    public CampingDTO(int campId, String campName, String lineIntro,
-                      String intro, String provinceName, String districtName,
-                      String postCode,
-                      String featureSummary,
-                      String induty,
-                      String addr, String addrDetails, double mapX,
-                      double mapY, String tel, String homepage, int staffCount) {
-        this.campId = campId;
-        this.campName = campName;
-        this.lineIntro = lineIntro;
-        this.intro = intro;
-        this.provinceName = provinceName;
-        this.districtName = districtName;
-        this.postCode = postCode;
-        this.featureSummary = featureSummary;
-        this.induty = induty;
-        this.addr = addr;
-        this.addrDetails = addrDetails;
-        this.mapX = mapX;
-        this.mapY = mapY;
-        this.tel = tel;
-        this.homepage = homepage;
-        this.staffCount = staffCount;
-    }
+    @JsonProperty("modifiedtime")
+    private LocalDateTime modifiedDate; // 수정일
 }
