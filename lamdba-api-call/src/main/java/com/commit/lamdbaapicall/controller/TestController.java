@@ -29,17 +29,8 @@ public class TestController {
 
     @GetMapping("/parse")
     public List<CampingDTO> test() {
-        List<CampingDTO> campingData = campingApiService.parseJsonToDTOList();
+        List<CampingDTO> campingData = campingApiService.parseCampingList();
 
         return campingData;
-    }
-
-    @GetMapping("/save")
-    public String saveData() {
-        List<CampingDTO> campingData = campingApiService.parseJsonToDTOList();
-
-        campingApiService.saveToDatabase(campingData);
-
-        return "실행됨";
     }
 }

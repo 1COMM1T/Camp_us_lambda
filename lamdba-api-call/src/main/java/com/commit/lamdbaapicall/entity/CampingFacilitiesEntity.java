@@ -11,5 +11,6 @@ public class CampingFacilitiesEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long campFacsId;
+    private String facilityName;
 
 }

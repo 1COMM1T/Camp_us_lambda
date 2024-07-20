@@ -1,9 +1,11 @@
 package com.commit.lamdbaapicall.service;
 
 import com.commit.lamdbaapicall.dto.CampingDTO;
+import com.commit.lamdbaapicall.dto.CampingFacilitiesDTO;
 import com.commit.lamdbaapicall.entity.CampingEntity;
 import com.commit.lamdbaapicall.openfeign.CampingApiClient;
 import com.commit.lamdbaapicall.repository.CampingRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -27,11 +29,11 @@ public class CampingApiServiceImpl implements CampingApiService {
     @Value("${gocamping.api.encoding-key}")
     private String serviceKey;
 
-    private static final int NUM_OF_ROWS = 1000;
+    private static final int NUM_OF_ROWS = 0;
     private static final int PAGE_NO = 0;
-    private static final String MOBILE_OS = "WIN";
-    private static final String MOBILE_APP = "campus";
-    private static final String TYPE = "json";
+    private static final String VALIDATION_CHECK_OS_KIND = "ETC";
+    private static final String VALIDATION_CHECK_APP_NAME = "campus";
+    private static final String RESPONSE_FIFE_FORMAT = "json";
 
     public CampingApiServiceImpl(CampingRepository campingRepository,
                                  CampingApiClient campingApiClient,
@@ -44,13 +46,20 @@ public class CampingApiServiceImpl implements CampingApiService {
 
     @Override
     public String callCampingApi() {
-        String responseJson = campingApiClient.getBaseList(NUM_OF_ROWS, PAGE_NO, MOBILE_OS, MOBILE_APP, serviceKey, TYPE);;
-        log.info("responseJson: {}", responseJson);
+        String responseJson =
+                campingApiClient.getBaseList(
+                        NUM_OF_ROWS, PAGE_NO,
+                        VALIDATION_CHECK_OS_KIND,
+                        VALIDATION_CHECK_APP_NAME,
+                        serviceKey, RESPONSE_FIFE_FORMAT);;
+
+        log.info("responseJson: {}", responseJson.isEmpty());
+
         return responseJson;
     }
 
     @Override
-    public List<CampingDTO> parseJsonToDTOList() {
+    public List<CampingDTO> parseCampingList() {
         String campingData = callCampingApi();
 
         try {
@@ -64,10 +73,28 @@ public class CampingApiServiceImpl implements CampingApiService {
 
             return campingDTOList;
 
+        // exception을 발생 시키는 readTree 부분 조사하여 exception 종류 별로 catch문 작성
         } catch (Exception e) {
             log.error("json 데이터 파싱 오류", e);
             return Collections.emptyList();
         }
+    }
+
+    @Override
+    public List<CampingFacilitiesDTO> parseCampingFacilitiesList() {
+        String campingFacilitiesData = callCampingApi();
+
+        JsonNode rootNode = null;
+        try {
+            rootNode = objectMapper.readTree(campingFacilitiesData);
+        } catch (JsonProcessingException e) {
+            log.error("json 데이터");
+            throw new RuntimeException(e);
+        }
+        JsonNode itemsNode = rootNode.path("response").path("body").path("items");
+
+
+        return List.of();
     }
 
     @Override
@@ -96,23 +123,16 @@ public class CampingApiServiceImpl implements CampingApiService {
     }
 
     @Override
-    public List<CampingEntity> saveToDatabase(List<CampingDTO> campingDTOList) {
+    public void saveCampingList(List<CampingDTO> campingDTOList) {
 
         List<CampingEntity> campingEntityList = campingDTOList.stream()
                 .map(this::convertDTOToEntity)
                 .collect(Collectors.toList());
 
-        // CampingEntity 리스트를 로그로 출력
-        campingEntityList.forEach(entity -> log.info("Saving CampingEntity: {}", entity));
-
-        log.info("====== ======= ======");
-
-        // 데이터베이스에 저장
         campingRepository.saveAll(campingEntityList);
+    }
 
-        List<CampingEntity> savedEntities = campingRepository.findAll();
-        savedEntities.forEach(campingEntity -> log.info("저장된 엔티티 출력: {}", campingEntity));
+    private void saveCampingFacilitiesList(List<CampingFacilitiesDTO> CampingFacilitiesDTOList) {
 
-        return campingEntityList;
     }
 }

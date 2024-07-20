@@ -1,13 +1,15 @@
 package com.commit.lamdbaapicall.service;
 
 import com.commit.lamdbaapicall.dto.CampingDTO;
+import com.commit.lamdbaapicall.dto.CampingFacilitiesDTO;
 import com.commit.lamdbaapicall.entity.CampingEntity;
 
 import java.util.List;
 
 public interface CampingApiService {
     String callCampingApi();
-    List<CampingDTO> parseJsonToDTOList();
+    List<CampingDTO> parseCampingList();
+    List<CampingFacilitiesDTO> parseCampingFacilitiesList();
     CampingEntity convertDTOToEntity(CampingDTO campingDTO);
-    List<CampingEntity> saveToDatabase(List<CampingDTO> campingDTOList);
+    void saveCampingList(List<CampingDTO> campingDTOList);
 }

@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CampingFacilitiesDTO {
-
+    private int campingFacilityId;
+    private String facilityName;
 }
