@@ -1,13 +1,11 @@
 package com.commit.lamdbaapicall.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.commit.lamdbaapicall.dto.CampingDTO;
+import com.commit.lamdbaapicall.entity.CampingEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CampingRepository {
-
-    @Autowired
-    private CampingRepository campingRepository;
-
+public interface CampingRepository extends JpaRepository<CampingEntity, Long> {
 
 }
