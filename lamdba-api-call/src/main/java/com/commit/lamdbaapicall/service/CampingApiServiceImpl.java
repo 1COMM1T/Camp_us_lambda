@@ -67,7 +67,8 @@ public class CampingApiServiceImpl implements CampingApiService {
             JsonNode itemsNode = rootNode.path("response").path("body").path("items").path("item");
 
             List<CampingDTO> campingDTOList = objectMapper.readValue(
-                    itemsNode.toString(), new TypeReference<List<CampingDTO>>() {});
+                    itemsNode.toString(), new TypeReference<List<CampingDTO>>() {}
+            );
 
             campingDTOList.forEach(dto -> log.info("CampingDTO: {}", dto));
 
@@ -84,15 +85,19 @@ public class CampingApiServiceImpl implements CampingApiService {
     public List<CampingFacilitiesDTO> parseCampingFacilitiesList() {
         String campingFacilitiesData = callCampingApi();
 
-        JsonNode rootNode = null;
+
         try {
-            rootNode = objectMapper.readTree(campingFacilitiesData);
+            JsonNode rootNode = objectMapper.readTree(campingFacilitiesData);
+            JsonNode itemsNode = rootNode.path("response").path("body").path("items").path("item");
+
+            List<CampingFacilitiesDTO> campingFacilitiesDTOList = objectMapper.readValue(
+                    itemsNode.toString(), new TypeReference<List<CampingFacilitiesDTO>>() {}
+            );
+
         } catch (JsonProcessingException e) {
             log.error("json 데이터");
             throw new RuntimeException(e);
         }
-        JsonNode itemsNode = rootNode.path("response").path("body").path("items");
-
 
         return List.of();
     }
