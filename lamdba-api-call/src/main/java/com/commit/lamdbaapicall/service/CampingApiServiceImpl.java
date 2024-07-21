@@ -3,6 +3,7 @@ package com.commit.lamdbaapicall.service;
 import com.commit.lamdbaapicall.dto.CampingDTO;
 import com.commit.lamdbaapicall.dto.CampingFacilitiesDTO;
 import com.commit.lamdbaapicall.entity.CampingEntity;
+import com.commit.lamdbaapicall.entity.CampingFacilitiesEntity;
 import com.commit.lamdbaapicall.openfeign.CampingApiClient;
 import com.commit.lamdbaapicall.repository.CampingRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -81,7 +82,6 @@ public class CampingApiServiceImpl implements CampingApiService {
         }
     }
 
-    // test 필요
     @Override
     public List<CampingFacilitiesDTO> parseCampingFacilitiesList() {
         String campingFacilitiesData = callCampingApi();
@@ -104,7 +104,7 @@ public class CampingApiServiceImpl implements CampingApiService {
     }
 
     @Override
-    public CampingEntity convertDTOToEntity(CampingDTO campingDTO) {
+    public CampingEntity convertCampingDTO(CampingDTO campingDTO) {
         CampingEntity campingEntity = new CampingEntity();
 
         campingEntity.setCampName(campingDTO.getCampName());
@@ -129,10 +129,18 @@ public class CampingApiServiceImpl implements CampingApiService {
     }
 
     @Override
+    public CampingFacilitiesEntity convertCampingFacilitiesDTO(CampingDTO campingDTO) {
+        CampingFacilitiesEntity facilitiesEntity = new CampingFacilitiesEntity();
+
+        return facilitiesEntity;
+    }
+
+
+    @Override
     public void saveCampingList(List<CampingDTO> campingDTOList) {
 
         List<CampingEntity> campingEntityList = campingDTOList.stream()
-                .map(this::convertDTOToEntity)
+                .map(this::convertCampingDTO)
                 .collect(Collectors.toList());
 
         campingRepository.saveAll(campingEntityList);
