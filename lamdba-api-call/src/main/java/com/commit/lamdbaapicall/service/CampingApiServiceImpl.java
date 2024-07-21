@@ -81,6 +81,7 @@ public class CampingApiServiceImpl implements CampingApiService {
         }
     }
 
+    // test 필요
     @Override
     public List<CampingFacilitiesDTO> parseCampingFacilitiesList() {
         String campingFacilitiesData = callCampingApi();
