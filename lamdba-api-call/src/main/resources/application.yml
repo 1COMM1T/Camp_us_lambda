@@ -1,3 +1,6 @@
+server:
+  port: 8888
+
 spring:
   application:
     name: lambda-api-call
@@ -28,4 +31,5 @@ aws:
 gocamping:
   api:
     base-url: http://apis.data.go.kr/B551011/GoCamping
-    key: Au%2FsJXmqYwNOJf1Wq3qbzEo6OzW4p5KALPI2%2FnvXgdZWHiHm5jTl2dMdr%2FR75gxHwTuOeH7pVCOUkUfg4c%2FkZQ%3D%3D
+    encoding-key: Au%2FsJXmqYwNOJf1Wq3qbzEo6OzW4p5KALPI2%2FnvXgdZWHiHm5jTl2dMdr%2FR75gxHwTuOeH7pVCOUkUfg4c%2FkZQ%3D%3D
+    decoding-key: Au/sJXmqYwNOJf1Wq3qbzEo6OzW4p5KALPI2/nvXgdZWHiHm5jTl2dMdr/R75gxHwTuOeH7pVCOUkUfg4c/kZQ==
