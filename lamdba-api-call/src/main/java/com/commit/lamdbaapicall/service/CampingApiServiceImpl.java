@@ -162,7 +162,13 @@ public class CampingApiServiceImpl implements CampingApiService {
         campingRepository.saveAll(campingEntityList);
     }
 
-    private void saveCampingFacilitiesList(List<CampingFacilitiesDTO> CampingFacilitiesDTOList) {
+    private void saveCampingFacilitiesList(List<CampingFacilitiesDTO> campingFacilitiesDTOList) {
+
+        List<CampingFacilitiesEntity> campingFacilitiesEntityList = campingFacilitiesDTOList.stream()
+                .map(this::convertCampingFacilitiesDTO)
+                .collect(Collectors.toList());
+
 
     }
+
 }
