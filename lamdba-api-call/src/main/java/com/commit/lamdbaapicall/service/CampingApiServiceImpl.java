@@ -129,8 +129,24 @@ public class CampingApiServiceImpl implements CampingApiService {
     }
 
     @Override
-    public CampingFacilitiesEntity convertCampingFacilitiesDTO(CampingDTO campingDTO) {
+    public CampingFacilitiesEntity convertCampingFacilitiesDTO(CampingFacilitiesDTO campingFacilitiesDTO) {
         CampingFacilitiesEntity facilitiesEntity = new CampingFacilitiesEntity();
+
+        facilitiesEntity.setFacilityName(campingFacilitiesDTO.getFacilityName());
+        facilitiesEntity.setInternalFacilitiesList(campingFacilitiesDTO.getInternalFacilitiesList());
+        facilitiesEntity.setToiletCnt(campingFacilitiesDTO.getToiletCnt());
+        facilitiesEntity.setShowerRoomCnt(campingFacilitiesDTO.getShowerRoomCnt());
+        facilitiesEntity.setSinkCnt(campingFacilitiesDTO.getSinkCnt());
+        facilitiesEntity.setBrazierClass(campingFacilitiesDTO.getBrazierClass());
+        facilitiesEntity.setSupportFacilities(campingFacilitiesDTO.getSupportFacilities());
+        facilitiesEntity.setOutdoorActivities(campingFacilitiesDTO.getOutdoorActivities());
+        facilitiesEntity.setPetAccess(campingFacilitiesDTO.getPetAccess());
+        facilitiesEntity.setFirstImageUrl(campingFacilitiesDTO.getFirstImageUrl());
+        facilitiesEntity.setOperationDay(campingFacilitiesDTO.getOperationDay());
+        facilitiesEntity.setPersonalTrailerStatus(campingFacilitiesDTO.getPersonalTrailerStatus());
+        facilitiesEntity.setPersonalCaravanStatus(campingFacilitiesDTO.getPersonalCaravanStatus());
+        facilitiesEntity.setRentalGearList(campingFacilitiesDTO.getRentalGearList());
+        facilitiesEntity.setFacilityName(campingFacilitiesDTO.getFacilityName());
 
         return facilitiesEntity;
     }

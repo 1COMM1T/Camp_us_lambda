@@ -12,6 +12,6 @@ public interface CampingApiService {
     List<CampingDTO> parseCampingList();
     List<CampingFacilitiesDTO> parseCampingFacilitiesList();
     CampingEntity convertCampingDTO(CampingDTO campingDTO);
-    CampingFacilitiesEntity convertCampingFacilitiesDTO(CampingDTO campingDTO);
+    CampingFacilitiesEntity convertCampingFacilitiesDTO(CampingFacilitiesDTO campingFacilitiesDTO);
     void saveCampingList(List<CampingDTO> campingDTOList);
 }
