@@ -5,6 +5,7 @@ import com.commit.lamdbaapicall.dto.CampingFacilitiesDTO;
 import com.commit.lamdbaapicall.entity.CampingEntity;
 import com.commit.lamdbaapicall.entity.CampingFacilitiesEntity;
 import com.commit.lamdbaapicall.openfeign.CampingApiClient;
+import com.commit.lamdbaapicall.repository.CampingFacilitiesRepository;
 import com.commit.lamdbaapicall.repository.CampingRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -26,6 +27,7 @@ public class CampingApiServiceImpl implements CampingApiService {
     private final CampingRepository campingRepository;
     private final CampingApiClient campingApiClient;
     private final ObjectMapper objectMapper;
+    private final CampingFacilitiesRepository campingFacilitiesRepository;
 
     @Value("${gocamping.api.encoding-key}")
     private String serviceKey;
@@ -38,13 +40,15 @@ public class CampingApiServiceImpl implements CampingApiService {
 
     public CampingApiServiceImpl(CampingRepository campingRepository,
                                  CampingApiClient campingApiClient,
-                                 ObjectMapper objectMapper) {
+                                 ObjectMapper objectMapper, CampingFacilitiesRepository campingFacilitiesRepository) {
         this.campingRepository = campingRepository;
         this.campingApiClient = campingApiClient;
         this.objectMapper = objectMapper;
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        this.campingFacilitiesRepository = campingFacilitiesRepository;
     }
 
+    // api 호출하여 json 가져오기
     @Override
     public String callCampingApi() {
         String responseJson =
@@ -59,6 +63,7 @@ public class CampingApiServiceImpl implements CampingApiService {
         return responseJson;
     }
 
+    // 캠핑 데이터 파싱
     @Override
     public List<CampingDTO> parseCampingList() {
         String campingData = callCampingApi();
@@ -82,10 +87,10 @@ public class CampingApiServiceImpl implements CampingApiService {
         }
     }
 
+    // 캠핑 시설 데이터 파싱
     @Override
     public List<CampingFacilitiesDTO> parseCampingFacilitiesList() {
         String campingFacilitiesData = callCampingApi();
-
 
         try {
             JsonNode rootNode = objectMapper.readTree(campingFacilitiesData);
@@ -95,14 +100,15 @@ public class CampingApiServiceImpl implements CampingApiService {
                     itemsNode.toString(), new TypeReference<List<CampingFacilitiesDTO>>() {}
             );
 
+            return campingFacilitiesDTOList;
+
         } catch (JsonProcessingException e) {
-            log.error("json 데이터");
+            log.error("json 데이터 파싱 에러");
             throw new RuntimeException(e);
         }
-
-        return List.of();
     }
 
+    // 캠핑 데이터 DTO -> Entity로 맵핑
     @Override
     public CampingEntity convertCampingDTO(CampingDTO campingDTO) {
         CampingEntity campingEntity = new CampingEntity();
@@ -124,15 +130,20 @@ public class CampingApiServiceImpl implements CampingApiService {
         campingEntity.setStaffCount(campingDTO.getStaffCount());
         campingEntity.setCreatedDate(campingDTO.getCreatedDate());
         campingEntity.setLastModifiedDate(campingDTO.getModifiedDate());
+        campingEntity.setGeneralSiteCnt(campingDTO.getGeneral_site_cnt());
+        campingEntity.setCarSiteCnt(campingDTO.getCar_site_cnt());
+        campingEntity.setGlampingSiteCnt(campingDTO.getGlamping_site_cnt());
+        campingEntity.setCaravanSiteCnt(campingDTO.getCaravan_site_cnt());
+        campingEntity.setPersonalCaravanSiteCnt(campingDTO.getPersonal_caravan_site_cnt());
 
         return campingEntity;
     }
 
+    // 캠핑 시설 데이터 DTO -> Entity로 변경
     @Override
     public CampingFacilitiesEntity convertCampingFacilitiesDTO(CampingFacilitiesDTO campingFacilitiesDTO) {
         CampingFacilitiesEntity facilitiesEntity = new CampingFacilitiesEntity();
 
-        facilitiesEntity.setFacilityName(campingFacilitiesDTO.getFacilityName());
         facilitiesEntity.setInternalFacilitiesList(campingFacilitiesDTO.getInternalFacilitiesList());
         facilitiesEntity.setToiletCnt(campingFacilitiesDTO.getToiletCnt());
         facilitiesEntity.setShowerRoomCnt(campingFacilitiesDTO.getShowerRoomCnt());
@@ -146,12 +157,21 @@ public class CampingApiServiceImpl implements CampingApiService {
         facilitiesEntity.setPersonalTrailerStatus(campingFacilitiesDTO.getPersonalTrailerStatus());
         facilitiesEntity.setPersonalCaravanStatus(campingFacilitiesDTO.getPersonalCaravanStatus());
         facilitiesEntity.setRentalGearList(campingFacilitiesDTO.getRentalGearList());
-        facilitiesEntity.setFacilityName(campingFacilitiesDTO.getFacilityName());
 
         return facilitiesEntity;
     }
 
+    // fk 찾기
+    private CampingEntity findCampingEntityForDTO(CampingFacilitiesDTO dto, List<CampingEntity> campingEntities) {
 
+        return campingEntities.stream()
+                .filter(entity -> entity.getCampId() == dto.getCampId())
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("CampingEntity를 찾을 수 없습니다. CampingFacilitiesDTO의 camp_id: " + dto.getCampId()));
+    }
+
+
+    // camping 테이블 저장
     @Override
     public void saveCampingList(List<CampingDTO> campingDTOList) {
 
@@ -162,11 +182,15 @@ public class CampingApiServiceImpl implements CampingApiService {
         campingRepository.saveAll(campingEntityList);
     }
 
-    private void saveCampingFacilitiesList(List<CampingFacilitiesDTO> campingFacilitiesDTOList) {
+    // campingFacilities 테이블 저장
+    @Override
+    public void saveCampingFacilitiesList(List<CampingFacilitiesDTO> campingFacilitiesDTOList) {
 
         List<CampingFacilitiesEntity> campingFacilitiesEntityList = campingFacilitiesDTOList.stream()
                 .map(this::convertCampingFacilitiesDTO)
                 .collect(Collectors.toList());
+
+        campingFacilitiesRepository.saveAll(campingFacilitiesEntityList);
     }
 
 }
