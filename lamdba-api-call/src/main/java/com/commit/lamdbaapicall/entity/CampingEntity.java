@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "camping")
@@ -87,4 +89,7 @@ public class CampingEntity implements Serializable {
 
     @Column(name = "personal_caravan_site_cnt")
     private int personalCaravanSiteCnt;
+
+    @OneToMany(mappedBy = "campingEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CampingFacilitiesEntity> campingFacilities = new ArrayList<>();
 }
