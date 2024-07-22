@@ -1,9 +1,6 @@
 package com.commit.lamdbaapicall.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
@@ -11,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CampingDTO {
@@ -66,4 +64,20 @@ public class CampingDTO {
 
     @JsonProperty("modifiedtime")
     private LocalDateTime modifiedDate; // 수정일
+
+    @JsonProperty("gnrlSiteCo")
+    private int general_site_cnt;   // 주요시설 일반야영장
+
+    @JsonProperty("autoSiteCo")
+    private int car_site_cnt;       // 주요시설 자동차 야영장
+
+    @JsonProperty("glampSiteCo")
+    private int glamping_site_cnt;  // 주요시설 글램핑
+
+    @JsonProperty("caravSiteCo")
+    private int caravan_site_cnt;   // 주요시설 카라반
+
+    @JsonProperty("indvdlCaravSiteCo")
+    private int personal_caravan_site_cnt;  // 주요시설 개인카라반
+
 }

@@ -73,4 +73,18 @@ public class CampingEntity implements Serializable {
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
+    @Column(name = "general_site_cnt")
+    private int generalSiteCnt;
+
+    @Column(name = "car_site_cnt")
+    private int carSiteCnt;
+
+    @Column(name = "glamping_site_cnt")
+    private int glampingSiteCnt;
+
+    @Column(name = "caravan_site_cnt")
+    private int caravanSiteCnt;
+
+    @Column(name = "personal_caravan_site_cnt")
+    private int personalCaravanSiteCnt;
 }
