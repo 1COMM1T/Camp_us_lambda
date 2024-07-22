@@ -167,8 +167,6 @@ public class CampingApiServiceImpl implements CampingApiService {
         List<CampingFacilitiesEntity> campingFacilitiesEntityList = campingFacilitiesDTOList.stream()
                 .map(this::convertCampingFacilitiesDTO)
                 .collect(Collectors.toList());
-
-
     }
 
 }
