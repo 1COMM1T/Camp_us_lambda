@@ -69,12 +69,6 @@ public class CampingEntity implements Serializable {
     @Column(name = "staff_count")
     private int staffCount;
 
-    @Column(name = "created_date")
-    private LocalDateTime createdDate;
-
-    @Column(name = "last_modified_date")
-    private LocalDateTime lastModifiedDate;
-
     @Column(name = "general_site_cnt")
     private int generalSiteCnt;
 
@@ -92,4 +86,10 @@ public class CampingEntity implements Serializable {
 
     @OneToMany(mappedBy = "campingEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CampingFacilitiesEntity> campingFacilities;
+
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
+    @Column(name = "last_modified_date")
+    private LocalDateTime lastModifiedDate;
 }
