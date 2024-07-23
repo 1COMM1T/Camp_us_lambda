@@ -91,5 +91,5 @@ public class CampingEntity implements Serializable {
     private int personalCaravanSiteCnt;
 
     @OneToMany(mappedBy = "campingEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CampingFacilitiesEntity> campingFacilities = new ArrayList<>();
+    private List<CampingFacilitiesEntity> campingFacilities;
 }

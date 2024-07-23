@@ -13,8 +13,8 @@ public class CampingFacilitiesDTO {
     private Long campId;
     private int facsTypeId;
 
-    @JsonProperty("sbrsCl")
-    private String internalFacilitiesList; // 부대시설
+    @JsonProperty("glampInnerFclty")
+    private String internalFacilitiesList; // 내부시설
 
     @JsonProperty("toiletCo")
     private int toiletCnt;
@@ -28,8 +28,8 @@ public class CampingFacilitiesDTO {
     @JsonProperty("braizerCl")
     private String brazierClass;
 
-    @JsonProperty("featureNm")
-    private String supportFacilities;
+    @JsonProperty("sbrsCl")
+    private String supportFacilities;   // 부대시설
 
     @JsonProperty("posblFcltyCl")
     private String outdoorActivities;

@@ -19,9 +19,9 @@ public class CampingFacilitiesEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long campFacsId;
-
-    @Column(name = "facs_type_id")
-    private int facsTypeId;
+//
+//    @Column(name = "facs_type_id")
+//    private int facsTypeId;
 
     @Column(name = "internal_facilities_list")
     private String internalFacilitiesList;
@@ -69,5 +69,7 @@ public class CampingFacilitiesEntity implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facs_type_id")
+//    @Column(name = "facs_type_id", insertable = false, updatable = false)
+//    private int facsTypeId;
     private FacilityTypeEntity facilityTypeEntity;
 }
