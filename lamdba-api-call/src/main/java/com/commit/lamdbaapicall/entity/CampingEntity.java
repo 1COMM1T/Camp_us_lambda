@@ -24,6 +24,9 @@ public class CampingEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long campId;
 
+    @Column(name = "content_id")
+    private Integer contentId;
+
     @Column(name = "camp_name", length = 100)
     private String campName;
 
@@ -70,19 +73,19 @@ public class CampingEntity implements Serializable {
     private int staffCount;
 
     @Column(name = "general_site_cnt")
-    private int generalSiteCnt;
+    private Integer generalSiteCnt;
 
     @Column(name = "car_site_cnt")
-    private int carSiteCnt;
+    private Integer carSiteCnt;
 
     @Column(name = "glamping_site_cnt")
-    private int glampingSiteCnt;
+    private Integer glampingSiteCnt;
 
     @Column(name = "caravan_site_cnt")
-    private int caravanSiteCnt;
+    private Integer caravanSiteCnt;
 
     @Column(name = "personal_caravan_site_cnt")
-    private int personalCaravanSiteCnt;
+    private Integer personalCaravanSiteCnt;
 
     @OneToMany(mappedBy = "campingEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CampingFacilitiesEntity> campingFacilities;

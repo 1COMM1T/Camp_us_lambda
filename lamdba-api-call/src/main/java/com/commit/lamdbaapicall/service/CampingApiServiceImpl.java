@@ -80,16 +80,20 @@ public class CampingApiServiceImpl implements CampingApiService {
             List<GoCampingDTO> goCampingDTOList = objectMapper.convertValue(itemsNode, new TypeReference<List<GoCampingDTO>>() {});
 
             for (GoCampingDTO campingDTO : goCampingDTOList) {
-                CampingEntity existingCampingEntity = campingRepository.findByCampName(campingDTO.getCampName());
-
-                LocalDateTime newModifiedDate = campingDTO.getModifiedDate();
-                if (existingCampingEntity != null) {
-                    LocalDateTime existingModifiedDate = existingCampingEntity.getLastModifiedDate();
-                    if (newModifiedDate.isBefore(existingModifiedDate)) {
-                        log.info("Skipping update for camp '{}'. Existing data is newer.", campingDTO.getCampName());
-                        continue; // 기존 데이터가 더 최신이므로 업데이트하지 않음
-                    }
-                }
+//                CampingEntity existingCampingEntity = campingRepository.findByContentId(campingDTO.getContentId());
+//
+//                LocalDateTime newModifiedDate = campingDTO.getModifiedDate();
+//                log.info("newModifiedDate: {}", newModifiedDate);
+//
+//                LocalDateTime oldModifiedDate = existingCampingEntity.getLastModifiedDate();
+//                log.info("oldModifiedDate: {}", oldModifiedDate);
+//                if (existingCampingEntity != null) {
+//                    LocalDateTime existingModifiedDate = existingCampingEntity.getLastModifiedDate();
+//                    if (newModifiedDate.isBefore(existingModifiedDate)) {
+//                        log.info("Skipping update for camp '{}'. Existing data is newer.", campingDTO.getCampName());
+//                        continue; // 기존 데이터가 더 최신이므로 업데이트하지 않음
+//                    }
+//                }
 
                 // 새 엔티티 생성 및 설정
                 CampingEntity campingEntity = new CampingEntity();
@@ -109,7 +113,7 @@ public class CampingApiServiceImpl implements CampingApiService {
                 campingEntity.setHomepage(campingDTO.getHomepage());
                 campingEntity.setStaffCount(campingDTO.getStaffCount());
                 campingEntity.setCreatedDate(campingDTO.getCreatedDate());
-                campingEntity.setLastModifiedDate(newModifiedDate); // 수정: 최신 modifiedDate 설정
+                campingEntity.setLastModifiedDate(campingDTO.getModifiedDate()); // 수정: 최신 modifiedDate 설정
                 campingEntity.setGeneralSiteCnt(campingDTO.getGeneral_site_cnt());
                 campingEntity.setCarSiteCnt(campingDTO.getCar_site_cnt());
                 campingEntity.setGlampingSiteCnt(campingDTO.getGlamping_site_cnt());
@@ -171,5 +175,3 @@ public class CampingApiServiceImpl implements CampingApiService {
         return facilitiesEntity;
     }
 }
-
-

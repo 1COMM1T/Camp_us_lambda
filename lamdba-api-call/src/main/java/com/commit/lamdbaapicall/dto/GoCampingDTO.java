@@ -16,6 +16,9 @@ public class GoCampingDTO {
     // campingEntity에 들어갈 데이터
     private int campId;         // 캠핑장 ID
 
+    @JsonProperty("contentId")
+    private Integer contentId;
+
     @JsonProperty("facltNm")
     private String campName;  // 야영장명
 
@@ -68,19 +71,19 @@ public class GoCampingDTO {
     private LocalDateTime modifiedDate; // 수정일
 
     @JsonProperty("gnrlSiteCo")
-    private int general_site_cnt;   // 주요시설 일반야영장
+    private Integer general_site_cnt;   // 주요시설 일반야영장
 
     @JsonProperty("autoSiteCo")
-    private int car_site_cnt;       // 주요시설 자동차 야영장
+    private Integer car_site_cnt;       // 주요시설 자동차 야영장
 
     @JsonProperty("glampSiteCo")
-    private int glamping_site_cnt;  // 주요시설 글램핑
+    private Integer glamping_site_cnt;  // 주요시설 글램핑
 
     @JsonProperty("caravSiteCo")
-    private int caravan_site_cnt;   // 주요시설 카라반
+    private Integer caravan_site_cnt;   // 주요시설 카라반
 
     @JsonProperty("indvdlCaravSiteCo")
-    private int personal_caravan_site_cnt;  // 주요시설 개인카라반
+    private Integer personal_caravan_site_cnt;  // 주요시설 개인카라반
 
     // campingFacilitiesEntity에 들어갈 데이터
     @JsonProperty("glampInnerFclty")
