@@ -5,6 +5,7 @@ spring:
   application:
     name: lambda-api-call
 
+# local DB
   datasource:
     url: jdbc:mysql://localhost:3306/campus
     username: campus

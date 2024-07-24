@@ -3,7 +3,6 @@ package com.commit.lamdbaapicall.service;
 import com.commit.lamdbaapicall.dto.GoCampingDTO;
 import com.commit.lamdbaapicall.entity.CampingEntity;
 import com.commit.lamdbaapicall.entity.CampingFacilitiesEntity;
-import com.commit.lamdbaapicall.entity.FacilityTypeEntity;
 import com.commit.lamdbaapicall.openfeign.CampingApiClient;
 import com.commit.lamdbaapicall.repository.CampingFacilitiesRepository;
 import com.commit.lamdbaapicall.repository.CampingRepository;
@@ -18,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +28,6 @@ public class CampingApiServiceImpl implements CampingApiService {
     private final CampingApiClient campingApiClient;
     private final ObjectMapper objectMapper;
     private final CampingFacilitiesRepository campingFacilitiesRepository;
-    private final com.commit.lamdbaapicall.repository.facilityTypeRepository facilityTypeRepository;
 
     @Value("${gocamping.api.encoding-key}")
     private String serviceKey;
@@ -49,7 +46,6 @@ public class CampingApiServiceImpl implements CampingApiService {
         this.objectMapper = objectMapper;
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         this.campingFacilitiesRepository = campingFacilitiesRepository;
-        this.facilityTypeRepository = facilityTypeRepository;
     }
 
     // api 호출하여 json 가져오기
@@ -61,7 +57,6 @@ public class CampingApiServiceImpl implements CampingApiService {
                         VALIDATION_CHECK_OS_KIND,
                         VALIDATION_CHECK_APP_NAME,
                         serviceKey, RESPONSE_FIFE_FORMAT);
-        ;
 
         log.info("responseJson: {}", responseJson.isEmpty());
 
@@ -74,69 +69,16 @@ public class CampingApiServiceImpl implements CampingApiService {
     public void saveCampingData() {
         try {
             String campingData = callCampingApi();
+
             JsonNode rootNode = objectMapper.readTree(campingData);
             JsonNode itemsNode = rootNode.path("response").path("body").path("items").path("item");
 
-            List<GoCampingDTO> goCampingDTOList = objectMapper.convertValue(itemsNode, new TypeReference<List<GoCampingDTO>>() {});
+            List<GoCampingDTO> campingDTOList = objectMapper.convertValue(itemsNode, new TypeReference<List<GoCampingDTO>>() {});
 
-            for (GoCampingDTO campingDTO : goCampingDTOList) {
-//                CampingEntity existingCampingEntity = campingRepository.findByContentId(campingDTO.getContentId());
-//
-//                LocalDateTime newModifiedDate = campingDTO.getModifiedDate();
-//                log.info("newModifiedDate: {}", newModifiedDate);
-//
-//                LocalDateTime oldModifiedDate = existingCampingEntity.getLastModifiedDate();
-//                log.info("oldModifiedDate: {}", oldModifiedDate);
-//                if (existingCampingEntity != null) {
-//                    LocalDateTime existingModifiedDate = existingCampingEntity.getLastModifiedDate();
-//                    if (newModifiedDate.isBefore(existingModifiedDate)) {
-//                        log.info("Skipping update for camp '{}'. Existing data is newer.", campingDTO.getCampName());
-//                        continue; // 기존 데이터가 더 최신이므로 업데이트하지 않음
-//                    }
-//                }
+            for (GoCampingDTO campingDTO : campingDTOList) {
 
-                // 새 엔티티 생성 및 설정
-                CampingEntity campingEntity = new CampingEntity();
-                campingEntity.setCampName(campingDTO.getCampName());
-                campingEntity.setLineIntro(campingDTO.getLineIntro());
-                campingEntity.setIntro(campingDTO.getIntro());
-                campingEntity.setDoName(campingDTO.getDoName());
-                campingEntity.setSigunguName(campingDTO.getSigunguName());
-                campingEntity.setPostCode(campingDTO.getPostCode());
-                campingEntity.setFeatureSummary(campingDTO.getFeatureSummary());
-                campingEntity.setInduty(campingDTO.getInduty());
-                campingEntity.setAddr(campingDTO.getAddr());
-                campingEntity.setAddr(campingDTO.getAddrDetails());
-                campingEntity.setMapX(campingDTO.getMapX());
-                campingEntity.setMapY(campingDTO.getMapY()); // 수정: mapY로 설정
-                campingEntity.setTel(campingDTO.getTel());
-                campingEntity.setHomepage(campingDTO.getHomepage());
-                campingEntity.setStaffCount(campingDTO.getStaffCount());
-                campingEntity.setCreatedDate(campingDTO.getCreatedDate());
-                campingEntity.setLastModifiedDate(campingDTO.getModifiedDate()); // 수정: 최신 modifiedDate 설정
-                campingEntity.setGeneralSiteCnt(campingDTO.getGeneral_site_cnt());
-                campingEntity.setCarSiteCnt(campingDTO.getCar_site_cnt());
-                campingEntity.setGlampingSiteCnt(campingDTO.getGlamping_site_cnt());
-                campingEntity.setCaravanSiteCnt(campingDTO.getCaravan_site_cnt());
-                campingEntity.setPersonalCaravanSiteCnt(campingDTO.getPersonal_caravan_site_cnt());
-
-                List<CampingFacilitiesEntity> facilities = new ArrayList<>();
-
-                if (campingDTO.getGeneral_site_cnt() > 0) {
-                    facilities.add(createFacility(campingEntity, campingDTO, 1)); // 1, 일반야영장
-                }
-                if (campingDTO.getCar_site_cnt() > 0) {
-                    facilities.add(createFacility(campingEntity, campingDTO, 2)); // 2, 자동차 야영장
-                }
-                if (campingDTO.getGlamping_site_cnt() > 0) {
-                    facilities.add(createFacility(campingEntity, campingDTO, 3)); // 3, 글램핑
-                }
-                if (campingDTO.getCaravan_site_cnt() > 0) {
-                    facilities.add(createFacility(campingEntity, campingDTO, 4)); // 4, 카라반
-                }
-                if (campingDTO.getPersonal_caravan_site_cnt() > 0) {
-                    facilities.add(createFacility(campingEntity, campingDTO, 5)); // 5, 개인카라반
-                }
+                CampingEntity campingEntity = mapToEntity(campingDTO);
+                List<CampingFacilitiesEntity> facilities = checkCampFacsType(campingEntity, campingDTO);
 
                 campingEntity.setCampingFacilities(facilities);
 
@@ -151,11 +93,66 @@ public class CampingApiServiceImpl implements CampingApiService {
         }
     }
 
+    private CampingEntity mapToEntity(GoCampingDTO campingDTO) {
+        CampingEntity campingEntity = new CampingEntity();
+
+        campingEntity.setCampName(campingDTO.getCampName());
+        campingEntity.setLineIntro(campingDTO.getLineIntro());
+        campingEntity.setIntro(campingDTO.getIntro());
+        campingEntity.setDoName(campingDTO.getDoName());
+        campingEntity.setSigunguName(campingDTO.getSigunguName());
+        campingEntity.setPostCode(campingDTO.getPostCode());
+        campingEntity.setFeatureSummary(campingDTO.getFeatureSummary());
+        campingEntity.setInduty(campingDTO.getInduty());
+        campingEntity.setAddr(campingDTO.getAddr());
+        campingEntity.setAddr(campingDTO.getAddrDetails());
+        campingEntity.setMapX(campingDTO.getMapX());
+        campingEntity.setMapY(campingDTO.getMapY());
+        campingEntity.setTel(campingDTO.getTel());
+        campingEntity.setHomepage(campingDTO.getHomepage());
+        campingEntity.setStaffCount(campingDTO.getStaffCount());
+        campingEntity.setCreatedDate(campingDTO.getCreatedDate());
+        campingEntity.setLastModifiedDate(campingDTO.getModifiedDate());
+        campingEntity.setGeneralSiteCnt(campingDTO.getGeneral_site_cnt());
+        campingEntity.setCarSiteCnt(campingDTO.getCar_site_cnt());
+        campingEntity.setGlampingSiteCnt(campingDTO.getGlamping_site_cnt());
+        campingEntity.setCaravanSiteCnt(campingDTO.getCaravan_site_cnt());
+        campingEntity.setPersonalCaravanSiteCnt(campingDTO.getPersonal_caravan_site_cnt());
+
+        return campingEntity;
+    }
+    private List<CampingFacilitiesEntity> checkCampFacsType(CampingEntity campingEntity, GoCampingDTO campingDTO) {
+        List<CampingFacilitiesEntity> facilities = new ArrayList<>();
+
+        if (campingDTO.getGeneral_site_cnt() > 0) {
+            facilities.add(
+                    createFacility(campingEntity, campingDTO, 1)); // 1, 일반야영장
+        }
+        if (campingDTO.getCar_site_cnt() > 0) {
+            facilities.add(
+                    createFacility(campingEntity, campingDTO, 2)); // 2, 자동차 야영장
+        }
+        if (campingDTO.getGlamping_site_cnt() > 0) {
+            facilities.add(
+                    createFacility(campingEntity, campingDTO, 3)); // 3, 글램핑
+        }
+        if (campingDTO.getCaravan_site_cnt() > 0) {
+            facilities.add(
+                    createFacility(campingEntity, campingDTO, 4)); // 4, 카라반
+        }
+        if (campingDTO.getPersonal_caravan_site_cnt() > 0) {
+            facilities.add(
+                    createFacility(campingEntity, campingDTO, 5)); // 5, 개인카라반
+        }
+
+        return facilities;
+    }
 
     private CampingFacilitiesEntity createFacility(CampingEntity camping, GoCampingDTO campingDTO, int facsTypeId) {
-        FacilityTypeEntity facilityType = facilityTypeRepository.findById(facsTypeId).orElseThrow(() -> new RuntimeException("Facility type not found"));
+//        FacilityTypeEntity facilityType = facilityTypeRepository.findById(facsTypeId).orElseThrow(() -> new RuntimeException("Facility type not found"));
 
         CampingFacilitiesEntity facilitiesEntity = new CampingFacilitiesEntity();
+
         facilitiesEntity.setCampingEntity(camping);
         facilitiesEntity.setInternalFacilitiesList(campingDTO.getInternalFacilitiesList());
         facilitiesEntity.setToiletCnt(campingDTO.getToiletCnt());

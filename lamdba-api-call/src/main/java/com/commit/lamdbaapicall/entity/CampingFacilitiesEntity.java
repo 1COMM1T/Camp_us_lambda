@@ -38,15 +38,6 @@ public class CampingFacilitiesEntity implements Serializable {
     @Column(name = "brazier_class")
     private String brazierClass;
 
-    @Column(name = "support_facilities")
-    private String supportFacilities;
-
-    @Column(name = "outdoor_activities")
-    private String outdoorActivities;
-
-    @Column(name = "pet_access")
-    private String petAccess;
-
     @Column(name = "first_image_url")
     private String firstImageUrl;
 

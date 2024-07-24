@@ -95,4 +95,13 @@ public class CampingEntity implements Serializable {
 
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
+
+    @Column(name = "support_facilities")
+    private String supportFacilities;
+
+    @Column(name = "outdoor_activities")
+    private String outdoorActivities;
+
+    @Column(name = "pet_access")
+    private String petAccess;
 }
