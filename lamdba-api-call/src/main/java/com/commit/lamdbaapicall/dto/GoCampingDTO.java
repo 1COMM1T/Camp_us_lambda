@@ -17,7 +17,7 @@ public class GoCampingDTO {
     private int campId;         // 캠핑장 ID
 
     @JsonProperty("contentId")
-    private Integer contentId;
+    private Integer camp_id;
 
     @JsonProperty("facltNm")
     private String campName;  // 야영장명

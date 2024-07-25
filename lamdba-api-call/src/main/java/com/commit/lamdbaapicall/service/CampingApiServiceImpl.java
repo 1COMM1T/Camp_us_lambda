@@ -101,7 +101,7 @@ public class CampingApiServiceImpl implements CampingApiService {
 
         CampingEntity campingEntity = new CampingEntity();
 
-        campingEntity.setContentId(campingDTO.getContentId());
+        campingEntity.setContentId(campingDTO.getCampId());
         campingEntity.setCampName(campingDTO.getCampName());
         campingEntity.setLineIntro(campingDTO.getLineIntro());
         campingEntity.setIntro(campingDTO.getIntro());
@@ -179,7 +179,6 @@ public class CampingApiServiceImpl implements CampingApiService {
         return facilitiesEntity;
     }
 
-    // 파싱된 데이터 확인용 메소드
     @Override
     public List<GoCampingDTO> parseToDTO() {
 

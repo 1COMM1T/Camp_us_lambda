@@ -21,10 +21,8 @@ import java.util.List;
 public class CampingEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long campId;
-
-    @Column(name = "content_id")
-    private int contentId;
+    @Column(name = "camp_id")
+    private Integer campId;
 
     @Column(name = "camp_name", length = 100)
     private String campName;
