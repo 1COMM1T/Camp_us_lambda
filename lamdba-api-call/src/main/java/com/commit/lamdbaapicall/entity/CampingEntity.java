@@ -25,7 +25,7 @@ public class CampingEntity implements Serializable {
     private long campId;
 
     @Column(name = "content_id")
-    private Integer contentId;
+    private int contentId;
 
     @Column(name = "camp_name", length = 100)
     private String campName;

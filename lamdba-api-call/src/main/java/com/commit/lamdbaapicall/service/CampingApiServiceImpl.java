@@ -79,31 +79,29 @@ public class CampingApiServiceImpl implements CampingApiService {
             boolean isTableEmpty = campingRepository.count() == 0;
 
             for (GoCampingDTO campingDTO : campingDTOList) {
+
+                int index = 0;
+
                 CampingEntity campingEntity;
 
                 if (isTableEmpty) {
-                    // 테이블이 비어있는 경우: 새로운 엔티티 생성
                     campingEntity = new CampingEntity();
                 } else {
-                    // 테이블이 비어있지 않은 경우: 기존 엔티티 검색
                     campingEntity = campingRepository.findByContentId(campingDTO.getContentId());
                     if (campingEntity == null) {
-                        campingEntity = new CampingEntity(); // 기존 엔티티가 없으면 새로 생성
+                        campingEntity = new CampingEntity();
                     }
                 }
 
-                // 엔티티 업데이트 또는 새로운 데이터 설정
                 mapToEntity(campingEntity, campingDTO);
 
-                // 관련 시설 정보 설정
-                List<CampingFacilitiesEntity> facilities = checkCampFacsType(campingEntity, campingDTO);
-                campingEntity.setCampingFacilities(facilities);
+                index += 1;
+                List<CampingFacilitiesEntity> facilities = checkCampFacsType(campingEntity, campingDTO, index);
+//                campingEntity.setCampingFacilities(facilities);
 
-                // 엔티티 및 시설 정보 저장
                 campingRepository.save(campingEntity);
                 campingFacilitiesRepository.saveAll(facilities);
 
-                log.info("Saved/Updated camp '{}'.", campingDTO.getCampName());
             }
         } catch (Exception e) {
             log.error("Error while saving camping data", e);
@@ -112,6 +110,7 @@ public class CampingApiServiceImpl implements CampingApiService {
 
     private CampingEntity mapToEntity(CampingEntity campingEntity, GoCampingDTO campingDTO) {
 
+        campingEntity.setContentId(campingDTO.getContentId());
         campingEntity.setCampName(campingDTO.getCampName());
         campingEntity.setLineIntro(campingDTO.getLineIntro());
         campingEntity.setIntro(campingDTO.getIntro());
@@ -142,37 +141,39 @@ public class CampingApiServiceImpl implements CampingApiService {
 
         return campingEntity;
     }
-    private List<CampingFacilitiesEntity> checkCampFacsType(CampingEntity campingEntity, GoCampingDTO campingDTO) {
+
+    private List<CampingFacilitiesEntity> checkCampFacsType(CampingEntity campingEntity, GoCampingDTO campingDTO, int index) {
         List<CampingFacilitiesEntity> facilities = new ArrayList<>();
 
         if (campingDTO.getGeneral_site_cnt() > 0) {
             facilities.add(
-                    createFacility(campingEntity, campingDTO, 1)); // 1, 일반야영장
+                    createFacility(campingEntity, campingDTO, 1, index)); // 1, 일반야영장
         }
         if (campingDTO.getCar_site_cnt() > 0) {
             facilities.add(
-                    createFacility(campingEntity, campingDTO, 2)); // 2, 자동차 야영장
+                    createFacility(campingEntity, campingDTO, 2, index)); // 2, 자동차 야영장
         }
         if (campingDTO.getGlamping_site_cnt() > 0) {
             facilities.add(
-                    createFacility(campingEntity, campingDTO, 3)); // 3, 글램핑
+                    createFacility(campingEntity, campingDTO, 3, index)); // 3, 글램핑
         }
         if (campingDTO.getCaravan_site_cnt() > 0) {
             facilities.add(
-                    createFacility(campingEntity, campingDTO, 4)); // 4, 카라반
+                    createFacility(campingEntity, campingDTO, 4, index)); // 4, 카라반
         }
         if (campingDTO.getPersonal_caravan_site_cnt() > 0) {
             facilities.add(
-                    createFacility(campingEntity, campingDTO, 5)); // 5, 개인카라반
+                    createFacility(campingEntity, campingDTO, 5, index)); // 5, 개인카라반
         }
 
         return facilities;
     }
 
-    private CampingFacilitiesEntity createFacility(CampingEntity camping, GoCampingDTO campingDTO, int facsTypeId) {
+    private CampingFacilitiesEntity createFacility(CampingEntity camping, GoCampingDTO campingDTO, int facsTypeId, int index) {
 
         CampingFacilitiesEntity facilitiesEntity = new CampingFacilitiesEntity();
 
+        facilitiesEntity.setFacsTypeId(index);
         facilitiesEntity.setCampingEntity(camping);
         facilitiesEntity.setInternalFacilitiesList(campingDTO.getInternalFacilitiesList());
         facilitiesEntity.setToiletCnt(campingDTO.getToiletCnt());
