@@ -7,6 +7,7 @@ import com.commit.lamdbaapicall.openfeign.CampingApiClient;
 import com.commit.lamdbaapicall.repository.CampingFacilitiesRepository;
 import com.commit.lamdbaapicall.repository.CampingRepository;
 import com.commit.lamdbaapicall.repository.facilityTypeRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -75,14 +77,30 @@ public class CampingApiServiceImpl implements CampingApiService {
 
             List<GoCampingDTO> campingDTOList = objectMapper.convertValue(itemsNode, new TypeReference<List<GoCampingDTO>>() {});
 
+            boolean isTableEmpty = campingRepository.count() == 0;
+
             for (GoCampingDTO campingDTO : campingDTOList) {
+                CampingEntity campingEntity;
 
-                CampingEntity campingEntity = mapToEntity(campingDTO);
+                if (isTableEmpty) {
+                    // 테이블이 비어있는 경우: 새로운 엔티티 생성
+                    campingEntity = new CampingEntity();
+                } else {
+                    // 테이블이 비어있지 않은 경우: 기존 엔티티 검색
+                    campingEntity = campingRepository.findByContentId(campingDTO.getContentId());
+                    if (campingEntity == null) {
+                        campingEntity = new CampingEntity(); // 기존 엔티티가 없으면 새로 생성
+                    }
+                }
+
+                // 엔티티 업데이트 또는 새로운 데이터 설정
+                mapToEntity(campingEntity, campingDTO);
+
+                // 관련 시설 정보 설정
                 List<CampingFacilitiesEntity> facilities = checkCampFacsType(campingEntity, campingDTO);
-
                 campingEntity.setCampingFacilities(facilities);
 
-                // 엔티티 저장 또는 업데이트
+                // 엔티티 및 시설 정보 저장
                 campingRepository.save(campingEntity);
                 campingFacilitiesRepository.saveAll(facilities);
 
@@ -93,8 +111,26 @@ public class CampingApiServiceImpl implements CampingApiService {
         }
     }
 
-    private CampingEntity mapToEntity(GoCampingDTO campingDTO) {
-        CampingEntity campingEntity = new CampingEntity();
+    @Override
+    public List<GoCampingDTO> parseToDTO() {
+
+        String campingData = callCampingApi();
+
+        JsonNode rootNode = null;
+        try {
+            rootNode = objectMapper.readTree(campingData);
+            JsonNode itemsNode = rootNode.path("response").path("body").path("items").path("item");
+
+            List<GoCampingDTO> campingDTOList = objectMapper.convertValue(itemsNode, new TypeReference<List<GoCampingDTO>>() {});
+
+            return campingDTOList;
+
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private CampingEntity mapToEntity(CampingEntity campingEntity, GoCampingDTO campingDTO) {
 
         campingEntity.setCampName(campingDTO.getCampName());
         campingEntity.setLineIntro(campingDTO.getLineIntro());
@@ -121,6 +157,8 @@ public class CampingApiServiceImpl implements CampingApiService {
         campingEntity.setSupportFacilities(campingDTO.getSupportFacilities());
         campingEntity.setOutdoorActivities(campingDTO.getOutdoorActivities());
         campingEntity.setPetAccess(campingDTO.getPetAccess());
+        campingEntity.setRentalGearList(campingDTO.getRentalGearList());
+        campingEntity.setOperationDay(campingDTO.getOperationDay());
 
         return campingEntity;
     }
@@ -162,10 +200,8 @@ public class CampingApiServiceImpl implements CampingApiService {
         facilitiesEntity.setSinkCnt(campingDTO.getSinkCnt());
         facilitiesEntity.setBrazierClass(campingDTO.getBrazierClass());
         facilitiesEntity.setFirstImageUrl(campingDTO.getFirstImageUrl());
-//        facilitiesEntity.setOperationDay(campingDTO.getOperationDay());
         facilitiesEntity.setPersonalTrailerStatus(campingDTO.getPersonalTrailerStatus());
         facilitiesEntity.setPersonalCaravanStatus(campingDTO.getPersonalCaravanStatus());
-//        facilitiesEntity.setRentalGearList(campingDTO.getRentalGearList());
         facilitiesEntity.setFacsTypeId(facsTypeId);
 
         return facilitiesEntity;

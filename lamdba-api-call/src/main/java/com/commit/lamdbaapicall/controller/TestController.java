@@ -2,6 +2,7 @@ package com.commit.lamdbaapicall.controller;
 
 import com.commit.lamdbaapicall.dto.CampingDTO;
 import com.commit.lamdbaapicall.dto.CampingFacilitiesDTO;
+import com.commit.lamdbaapicall.dto.GoCampingDTO;
 import com.commit.lamdbaapicall.entity.CampingEntity;
 import com.commit.lamdbaapicall.service.CampingApiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,13 @@ public class TestController {
 
         return campingData;
     }
-//
-//    @GetMapping("/parse")
-//    public List<CampingDTO> test() {
-//        List<CampingDTO> campingData = campingApiService.parseCampingList();
-//
-//        return campingData;
-//    }
+
+    @GetMapping("/parse")
+    public List<GoCampingDTO> test() {
+        List<GoCampingDTO> campingData = campingApiService.parseToDTO();
+
+        return campingData;
+    }
 //
 //    @GetMapping("/parse2")
 //    public List<CampingFacilitiesDTO> test2() {
