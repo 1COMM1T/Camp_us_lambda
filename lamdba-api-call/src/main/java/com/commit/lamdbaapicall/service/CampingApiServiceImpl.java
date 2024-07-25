@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -111,25 +110,6 @@ public class CampingApiServiceImpl implements CampingApiService {
         }
     }
 
-    @Override
-    public List<GoCampingDTO> parseToDTO() {
-
-        String campingData = callCampingApi();
-
-        JsonNode rootNode = null;
-        try {
-            rootNode = objectMapper.readTree(campingData);
-            JsonNode itemsNode = rootNode.path("response").path("body").path("items").path("item");
-
-            List<GoCampingDTO> campingDTOList = objectMapper.convertValue(itemsNode, new TypeReference<List<GoCampingDTO>>() {});
-
-            return campingDTOList;
-
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private CampingEntity mapToEntity(CampingEntity campingEntity, GoCampingDTO campingDTO) {
 
         campingEntity.setCampName(campingDTO.getCampName());
@@ -205,5 +185,25 @@ public class CampingApiServiceImpl implements CampingApiService {
         facilitiesEntity.setFacsTypeId(facsTypeId);
 
         return facilitiesEntity;
+    }
+
+    // 파싱된 데이터 확인용 메소드
+    @Override
+    public List<GoCampingDTO> parseToDTO() {
+
+        String campingData = callCampingApi();
+
+        JsonNode rootNode = null;
+        try {
+            rootNode = objectMapper.readTree(campingData);
+            JsonNode itemsNode = rootNode.path("response").path("body").path("items").path("item");
+
+            List<GoCampingDTO> campingDTOList = objectMapper.convertValue(itemsNode, new TypeReference<List<GoCampingDTO>>() {});
+
+            return campingDTOList;
+
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

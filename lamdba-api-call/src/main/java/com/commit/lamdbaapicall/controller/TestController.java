@@ -1,15 +1,11 @@
 package com.commit.lamdbaapicall.controller;
 
-import com.commit.lamdbaapicall.dto.CampingDTO;
-import com.commit.lamdbaapicall.dto.CampingFacilitiesDTO;
 import com.commit.lamdbaapicall.dto.GoCampingDTO;
-import com.commit.lamdbaapicall.entity.CampingEntity;
 import com.commit.lamdbaapicall.service.CampingApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController

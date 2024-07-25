@@ -36,10 +36,10 @@ public class CampingEntity implements Serializable {
     @Column(name = "intro", columnDefinition = "MEDIUMTEXT")
     private String intro;
 
-    @Column(name = "province_name", length = 50)
+    @Column(name = "do_name", length = 50)
     private String doName;
 
-    @Column(name = "district_name", length = 50)
+    @Column(name = "sigungu_name", length = 50)
     private String sigunguName;
 
     @Column(name = "post_code", length = 10)
@@ -87,9 +87,6 @@ public class CampingEntity implements Serializable {
     @Column(name = "personal_caravan_site_cnt")
     private Integer personalCaravanSiteCnt;
 
-    @OneToMany(mappedBy = "campingEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CampingFacilitiesEntity> campingFacilities;
-
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
@@ -110,4 +107,7 @@ public class CampingEntity implements Serializable {
 
     @Column(name = "operation_day")
     private String operationDay;
+
+    @OneToMany(mappedBy = "campingEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CampingFacilitiesEntity> campingFacilities;
 }
