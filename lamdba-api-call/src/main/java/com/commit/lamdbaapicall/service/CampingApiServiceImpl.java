@@ -76,28 +76,17 @@ public class CampingApiServiceImpl implements CampingApiService {
 
             List<GoCampingDTO> campingDTOList = objectMapper.convertValue(itemsNode, new TypeReference<List<GoCampingDTO>>() {});
 
-            boolean isTableEmpty = campingRepository.count() == 0;
+            // 테이블 초기화
+            campingFacilitiesRepository.deleteAll();
+            campingRepository.deleteAll();
 
             for (GoCampingDTO campingDTO : campingDTOList) {
 
+                CampingEntity campingEntity = mapToEntity(campingDTO);
+
                 int index = 0;
-
-                CampingEntity campingEntity;
-
-                if (isTableEmpty) {
-                    campingEntity = new CampingEntity();
-                } else {
-                    campingEntity = campingRepository.findByContentId(campingDTO.getContentId());
-                    if (campingEntity == null) {
-                        campingEntity = new CampingEntity();
-                    }
-                }
-
-                mapToEntity(campingEntity, campingDTO);
-
                 index += 1;
                 List<CampingFacilitiesEntity> facilities = checkCampFacsType(campingEntity, campingDTO, index);
-//                campingEntity.setCampingFacilities(facilities);
 
                 campingRepository.save(campingEntity);
                 campingFacilitiesRepository.saveAll(facilities);
@@ -108,7 +97,9 @@ public class CampingApiServiceImpl implements CampingApiService {
         }
     }
 
-    private CampingEntity mapToEntity(CampingEntity campingEntity, GoCampingDTO campingDTO) {
+    private CampingEntity mapToEntity(GoCampingDTO campingDTO) {
+
+        CampingEntity campingEntity = new CampingEntity();
 
         campingEntity.setContentId(campingDTO.getContentId());
         campingEntity.setCampName(campingDTO.getCampName());

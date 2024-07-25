@@ -31,22 +31,11 @@ public class TestController {
 
         return campingData;
     }
-//
-//    @GetMapping("/parse2")
-//    public List<CampingFacilitiesDTO> test2() {
-//        List<CampingFacilitiesDTO> facilitiesData = campingApiService.parseCampingFacilitiesList();
-//
-//        return facilitiesData;
-//    }
-//
-//    @GetMapping("/save")
-//    public String save() {
-//        List<CampingDTO> campingData = campingApiService.parseCampingList();
-//        List<CampingFacilitiesDTO> facilitiesData = campingApiService.parseCampingFacilitiesList();
-//
-//        campingApiService.saveCampingList(campingData);
-//        campingApiService.saveCampingFacilitiesList(facilitiesData);
-//
-//        return "저장";
-//    }
+
+    @GetMapping("/save")
+    public String save() {
+        campingApiService.saveCampingData();
+
+        return "실행됨";
+    }
 }

@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CampingRepository extends JpaRepository<CampingEntity, Long> {
-    CampingEntity findByContentId(Integer contentId);
 }
