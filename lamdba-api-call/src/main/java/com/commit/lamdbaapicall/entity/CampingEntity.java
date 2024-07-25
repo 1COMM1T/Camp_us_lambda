@@ -104,4 +104,10 @@ public class CampingEntity implements Serializable {
 
     @Column(name = "pet_access")
     private String petAccess;
+
+    @Column(name = "rental_gear_list")
+    private String rentalGearList;
+
+    @Column(name = "operation_day")
+    private String operationDay;
 }

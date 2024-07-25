@@ -41,17 +41,11 @@ public class CampingFacilitiesEntity implements Serializable {
     @Column(name = "first_image_url")
     private String firstImageUrl;
 
-    @Column(name = "operation_day")
-    private String operationDay;
-
     @Column(name = "personal_trailer_status")
     private String personalTrailerStatus;
 
     @Column(name = "personal_caravan_status")
     private String personalCaravanStatus;
-
-    @Column(name = "rental_gear_list")
-    private String rentalGearList;
 
     // fk
     @ManyToOne(fetch = FetchType.LAZY)

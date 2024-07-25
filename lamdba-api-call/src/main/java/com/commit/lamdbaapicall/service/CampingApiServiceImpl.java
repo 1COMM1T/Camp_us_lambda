@@ -118,6 +118,9 @@ public class CampingApiServiceImpl implements CampingApiService {
         campingEntity.setGlampingSiteCnt(campingDTO.getGlamping_site_cnt());
         campingEntity.setCaravanSiteCnt(campingDTO.getCaravan_site_cnt());
         campingEntity.setPersonalCaravanSiteCnt(campingDTO.getPersonal_caravan_site_cnt());
+        campingEntity.setSupportFacilities(campingDTO.getSupportFacilities());
+        campingEntity.setOutdoorActivities(campingDTO.getOutdoorActivities());
+        campingEntity.setPetAccess(campingDTO.getPetAccess());
 
         return campingEntity;
     }
@@ -149,7 +152,6 @@ public class CampingApiServiceImpl implements CampingApiService {
     }
 
     private CampingFacilitiesEntity createFacility(CampingEntity camping, GoCampingDTO campingDTO, int facsTypeId) {
-//        FacilityTypeEntity facilityType = facilityTypeRepository.findById(facsTypeId).orElseThrow(() -> new RuntimeException("Facility type not found"));
 
         CampingFacilitiesEntity facilitiesEntity = new CampingFacilitiesEntity();
 
@@ -159,14 +161,11 @@ public class CampingApiServiceImpl implements CampingApiService {
         facilitiesEntity.setShowerRoomCnt(campingDTO.getShowerRoomCnt());
         facilitiesEntity.setSinkCnt(campingDTO.getSinkCnt());
         facilitiesEntity.setBrazierClass(campingDTO.getBrazierClass());
-        facilitiesEntity.setSupportFacilities(campingDTO.getSupportFacilities());
-        facilitiesEntity.setOutdoorActivities(campingDTO.getOutdoorActivities());
-        facilitiesEntity.setPetAccess(campingDTO.getPetAccess());
         facilitiesEntity.setFirstImageUrl(campingDTO.getFirstImageUrl());
-        facilitiesEntity.setOperationDay(campingDTO.getOperationDay());
+//        facilitiesEntity.setOperationDay(campingDTO.getOperationDay());
         facilitiesEntity.setPersonalTrailerStatus(campingDTO.getPersonalTrailerStatus());
         facilitiesEntity.setPersonalCaravanStatus(campingDTO.getPersonalCaravanStatus());
-        facilitiesEntity.setRentalGearList(campingDTO.getRentalGearList());
+//        facilitiesEntity.setRentalGearList(campingDTO.getRentalGearList());
         facilitiesEntity.setFacsTypeId(facsTypeId);
 
         return facilitiesEntity;
