@@ -21,8 +21,8 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
 
 schedule:
-#  cron: "0/5 * * * * *"
-  cron: "* * 0/24 * * *"
+  cron: "0/5 * * * * *"
+#  cron: "* * 0/24 * * *"
   use: true
 
 aws:

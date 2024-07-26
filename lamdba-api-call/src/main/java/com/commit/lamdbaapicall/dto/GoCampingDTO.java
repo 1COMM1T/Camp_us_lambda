@@ -14,10 +14,9 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GoCampingDTO {
     // campingEntity에 들어갈 데이터
-    private int campId;         // 캠핑장 ID
 
     @JsonProperty("contentId")
-    private Integer camp_id;
+    private long campId;    // 콘텐트 ID
 
     @JsonProperty("facltNm")
     private String campName;  // 야영장명
@@ -85,43 +84,44 @@ public class GoCampingDTO {
     @JsonProperty("indvdlCaravSiteCo")
     private Integer personal_caravan_site_cnt;  // 주요시설 개인카라반
 
+    @JsonProperty("sbrsCl")
+    private String supportFacilities;   // 편의 시설
+
+    @JsonProperty("posblFcltyCl")
+    private String outdoorActivities;   // 주변 이용가능 시설
+
+    @JsonProperty("animalCmgCl")
+    private String petAccess;           // 반려동물동반여부
+
+    @JsonProperty("operDeCl")
+    private String operationDay;        // 운영일
+
+    @JsonProperty("eqpmnLendCl")
+    private String rentalGearList;          // 장비 대여 리스트
+
     // campingFacilitiesEntity에 들어갈 데이터
     @JsonProperty("glampInnerFclty")
     private String internalFacilitiesList; // 부대시설
 
     @JsonProperty("toiletCo")
-    private int toiletCnt;
+    private int toiletCnt;      // 화장실 개수
 
     @JsonProperty("swrmCo")
-    private int showerRoomCnt;
+    private int showerRoomCnt;  // 샤워실 개수
 
     @JsonProperty("btrpCO")
-    private int sinkCnt;
+    private int sinkCnt;        // 싱크대 개수
 
     @JsonProperty("braizerCl")
-    private String brazierClass;
-
-    @JsonProperty("sbrsCl")
-    private String supportFacilities;
-
-    @JsonProperty("posblFcltyCl")
-    private String outdoorActivities;
-
-    @JsonProperty("animalCmgCl")
-    private String petAccess;
+    private String brazierClass;    // 화로대 개수
 
     @JsonProperty("firstImageUrl")
-    private String firstImageUrl;
-
-    @JsonProperty("operDeCl")
-    private String operationDay;
+    private String firstImageUrl;       // 대표이미지
 
     @JsonProperty("trlerAcmpnyAt")
-    private String personalTrailerStatus;
+    private String personalTrailerStatus;   // 개인 트레일러 동반 여부
 
     @JsonProperty("caravAcmpnyAt")
-    private String personalCaravanStatus;
+    private String personalCaravanStatus;   // 개인 카라반 동반 여부
 
-    @JsonProperty("eqpmnLendCl")
-    private String rentalGearList;
 }

@@ -22,7 +22,7 @@ public class CampingEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "camp_id")
-    private Integer campId;
+    private long campId;
 
     @Column(name = "camp_name", length = 100)
     private String campName;

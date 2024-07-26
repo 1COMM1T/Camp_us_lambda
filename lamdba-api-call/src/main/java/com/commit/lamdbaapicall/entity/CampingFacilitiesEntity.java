@@ -18,7 +18,11 @@ public class CampingFacilitiesEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long campFacsId;
+    @Column(name = "camp_facs_id")
+    private int campFacsId;
+
+    @Column(name = "camp_id")
+    private long campId;
 
     @Column(name = "facs_type_id")
     private int facsTypeId;
@@ -49,7 +53,7 @@ public class CampingFacilitiesEntity implements Serializable {
 
     // fk
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "camp_id")
+    @JoinColumn(name = "camp_id", insertable = false, updatable = false)
     private CampingEntity campingEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -83,12 +83,13 @@ public class CampingApiServiceImpl implements CampingApiService {
             for (GoCampingDTO campingDTO : campingDTOList) {
 
                 CampingEntity campingEntity = mapToEntity(campingDTO);
+                campingRepository.save(campingEntity);
 
                 int index = 0;
                 index += 1;
                 List<CampingFacilitiesEntity> facilities = checkCampFacsType(campingEntity, campingDTO, index);
+                campingEntity.setCampingFacilities(facilities);
 
-                campingRepository.save(campingEntity);
                 campingFacilitiesRepository.saveAll(facilities);
 
             }
@@ -101,7 +102,7 @@ public class CampingApiServiceImpl implements CampingApiService {
 
         CampingEntity campingEntity = new CampingEntity();
 
-        campingEntity.setContentId(campingDTO.getCampId());
+        campingEntity.setCampId(campingDTO.getCampId());
         campingEntity.setCampName(campingDTO.getCampName());
         campingEntity.setLineIntro(campingDTO.getLineIntro());
         campingEntity.setIntro(campingDTO.getIntro());
@@ -164,7 +165,7 @@ public class CampingApiServiceImpl implements CampingApiService {
 
         CampingFacilitiesEntity facilitiesEntity = new CampingFacilitiesEntity();
 
-        facilitiesEntity.setFacsTypeId(index);
+        facilitiesEntity.setCampFacsId(index);
         facilitiesEntity.setCampingEntity(camping);
         facilitiesEntity.setInternalFacilitiesList(campingDTO.getInternalFacilitiesList());
         facilitiesEntity.setToiletCnt(campingDTO.getToiletCnt());
