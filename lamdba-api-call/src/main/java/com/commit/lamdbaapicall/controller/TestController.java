@@ -20,22 +20,11 @@ public class TestController {
 
     @GetMapping("/call")
     public String call() {
-        String campingData = campingApiService.callCampingApi();
-
-        return campingData;
+        return campingApiService.callCampingApi();
     }
 
     @GetMapping("/parse")
-    public List<GoCampingDTO> test() {
-        List<GoCampingDTO> campingData = campingApiService.parseToDTO();
-
-        return campingData;
-    }
-
-    @GetMapping("/save")
-    public String save() {
-        campingApiService.saveCampingData();
-
-        return "실행됨";
+    public List<GoCampingDTO> parse() {
+        return campingApiService.parseToDTO();
     }
 }
