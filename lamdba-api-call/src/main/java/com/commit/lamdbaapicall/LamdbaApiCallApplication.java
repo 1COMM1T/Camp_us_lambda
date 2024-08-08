@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
 @SpringBootApplication
-@EnableFeignClients
+@EnableFeignClients(basePackages = "com.commit.lamdbaapicall.openfeign")
 public class LamdbaApiCallApplication {
 
     public static void main(String[] args) {

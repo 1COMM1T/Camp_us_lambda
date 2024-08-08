@@ -1,16 +1,62 @@
 package com.commit.lamdbaapicall.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "camping_facilities")
 public class CampingFacilitiesEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long campFacsId;
-    private String facilityName;
+    @Column(name = "camp_facs_id")
+    private int campFacsId;
 
+    @Column(name = "camp_id")
+    private long campId;
+
+    @Column(name = "facs_type_id")
+    private int facsTypeId;
+
+    @Column(name = "internal_facilities_list")
+    private String internalFacilitiesList;
+
+    @Column(name = "toilet_cnt")
+    private int toiletCnt;
+
+    @Column(name = "shower_room_cnt")
+    private int showerRoomCnt;
+
+    @Column(name = "sink_cnt")
+    private int sinkCnt;
+
+    @Column(name = "brazier_class")
+    private String brazierClass;
+
+    @Column(name = "first_image_url")
+    private String firstImageUrl;
+
+    @Column(name = "personal_trailer_status")
+    private String personalTrailerStatus;
+
+    @Column(name = "personal_caravan_status")
+    private String personalCaravanStatus;
+
+    // fk
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "camp_id", insertable = false, updatable = false)
+    private CampingEntity campingEntity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "facs_type_id", insertable = false, updatable = false)
+    private FacilityTypeEntity facilityTypeEntity;
 }

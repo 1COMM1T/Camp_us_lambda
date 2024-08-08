@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "camping")
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
 public class CampingEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "camp_id")
     private long campId;
 
     @Column(name = "camp_name", length = 100)
@@ -31,10 +33,10 @@ public class CampingEntity implements Serializable {
     @Column(name = "intro", columnDefinition = "MEDIUMTEXT")
     private String intro;
 
-    @Column(name = "province_name", length = 50)
+    @Column(name = "do_name", length = 50)
     private String doName;
 
-    @Column(name = "district_name", length = 50)
+    @Column(name = "sigungu_name", length = 50)
     private String sigunguName;
 
     @Column(name = "post_code", length = 10)
@@ -67,10 +69,42 @@ public class CampingEntity implements Serializable {
     @Column(name = "staff_count")
     private int staffCount;
 
+    @Column(name = "general_site_cnt")
+    private Integer generalSiteCnt;
+
+    @Column(name = "car_site_cnt")
+    private Integer carSiteCnt;
+
+    @Column(name = "glamping_site_cnt")
+    private Integer glampingSiteCnt;
+
+    @Column(name = "caravan_site_cnt")
+    private Integer caravanSiteCnt;
+
+    @Column(name = "personal_caravan_site_cnt")
+    private Integer personalCaravanSiteCnt;
+
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
+    @Column(name = "support_facilities")
+    private String supportFacilities;
+
+    @Column(name = "outdoor_activities")
+    private String outdoorActivities;
+
+    @Column(name = "pet_access")
+    private String petAccess;
+
+    @Column(name = "rental_gear_list")
+    private String rentalGearList;
+
+    @Column(name = "operation_day")
+    private String operationDay;
+
+    @OneToMany(mappedBy = "campingEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CampingFacilitiesEntity> campingFacilities;
 }

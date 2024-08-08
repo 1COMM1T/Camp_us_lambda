@@ -1,11 +1,8 @@
 package com.commit.lamdbaapicall.openfeign;
 
-import com.commit.lamdbaapicall.entity.CampingEntity;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
 
 @FeignClient(name = "CampingApiClient", url = "${gocamping.api.base-url}")
 public interface CampingApiClient {
@@ -18,5 +15,4 @@ public interface CampingApiClient {
             @RequestParam("serviceKey") String serviceKey,
             @RequestParam("_type") String type
     );
-
 }

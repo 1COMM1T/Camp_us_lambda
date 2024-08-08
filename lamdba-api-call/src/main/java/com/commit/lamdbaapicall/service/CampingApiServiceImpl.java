@@ -1,22 +1,25 @@
 package com.commit.lamdbaapicall.service;
 
-import com.commit.lamdbaapicall.dto.CampingDTO;
-import com.commit.lamdbaapicall.dto.CampingFacilitiesDTO;
+import com.commit.lamdbaapicall.dto.GoCampingDTO;
 import com.commit.lamdbaapicall.entity.CampingEntity;
+import com.commit.lamdbaapicall.entity.CampingFacilitiesEntity;
 import com.commit.lamdbaapicall.openfeign.CampingApiClient;
+import com.commit.lamdbaapicall.repository.CampingFacilitiesRepository;
 import com.commit.lamdbaapicall.repository.CampingRepository;
+import com.commit.lamdbaapicall.repository.facilityTypeRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -25,11 +28,12 @@ public class CampingApiServiceImpl implements CampingApiService {
     private final CampingRepository campingRepository;
     private final CampingApiClient campingApiClient;
     private final ObjectMapper objectMapper;
+    private final CampingFacilitiesRepository campingFacilitiesRepository;
 
     @Value("${gocamping.api.encoding-key}")
     private String serviceKey;
 
-    private static final int NUM_OF_ROWS = 0;
+    private static final int NUM_OF_ROWS = 5000;
     private static final int PAGE_NO = 0;
     private static final String VALIDATION_CHECK_OS_KIND = "ETC";
     private static final String VALIDATION_CHECK_APP_NAME = "campus";
@@ -37,13 +41,15 @@ public class CampingApiServiceImpl implements CampingApiService {
 
     public CampingApiServiceImpl(CampingRepository campingRepository,
                                  CampingApiClient campingApiClient,
-                                 ObjectMapper objectMapper) {
+                                 ObjectMapper objectMapper, CampingFacilitiesRepository campingFacilitiesRepository, facilityTypeRepository facilityTypeRepository) {
         this.campingRepository = campingRepository;
         this.campingApiClient = campingApiClient;
         this.objectMapper = objectMapper;
         this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        this.campingFacilitiesRepository = campingFacilitiesRepository;
     }
 
+    // api 호출하여 json 가져오기
     @Override
     public String callCampingApi() {
         String responseJson =
@@ -51,61 +57,52 @@ public class CampingApiServiceImpl implements CampingApiService {
                         NUM_OF_ROWS, PAGE_NO,
                         VALIDATION_CHECK_OS_KIND,
                         VALIDATION_CHECK_APP_NAME,
-                        serviceKey, RESPONSE_FIFE_FORMAT);;
+                        serviceKey, RESPONSE_FIFE_FORMAT);
 
         log.info("responseJson: {}", responseJson.isEmpty());
 
         return responseJson;
     }
 
+    @Transactional
+    @Scheduled(cron = "${schedule.cron}") // 매일 자정에 실행
     @Override
-    public List<CampingDTO> parseCampingList() {
-        String campingData = callCampingApi();
-
+    public void saveCampingData() {
         try {
+            String campingData = callCampingApi();
+
             JsonNode rootNode = objectMapper.readTree(campingData);
             JsonNode itemsNode = rootNode.path("response").path("body").path("items").path("item");
 
-            List<CampingDTO> campingDTOList = objectMapper.readValue(
-                    itemsNode.toString(), new TypeReference<List<CampingDTO>>() {}
-            );
+            List<GoCampingDTO> campingDTOList = objectMapper.convertValue(itemsNode, new TypeReference<List<GoCampingDTO>>() {});
 
-            campingDTOList.forEach(dto -> log.info("CampingDTO: {}", dto));
+            // 테이블 초기화
+            campingFacilitiesRepository.deleteAll();
+            campingRepository.deleteAll();
 
-            return campingDTOList;
+            for (GoCampingDTO campingDTO : campingDTOList) {
 
-        // exception을 발생 시키는 readTree 부분 조사하여 exception 종류 별로 catch문 작성
+                CampingEntity campingEntity = mapToEntity(campingDTO);
+                campingRepository.save(campingEntity);
+
+                int index = 0;
+                index += 1;
+                List<CampingFacilitiesEntity> facilities = checkCampFacsType(campingEntity, campingDTO, index);
+                campingEntity.setCampingFacilities(facilities);
+
+                campingFacilitiesRepository.saveAll(facilities);
+
+            }
         } catch (Exception e) {
-            log.error("json 데이터 파싱 오류", e);
-            return Collections.emptyList();
+            log.error("Error while saving camping data", e);
         }
     }
 
-    @Override
-    public List<CampingFacilitiesDTO> parseCampingFacilitiesList() {
-        String campingFacilitiesData = callCampingApi();
+    private CampingEntity mapToEntity(GoCampingDTO campingDTO) {
 
-
-        try {
-            JsonNode rootNode = objectMapper.readTree(campingFacilitiesData);
-            JsonNode itemsNode = rootNode.path("response").path("body").path("items").path("item");
-
-            List<CampingFacilitiesDTO> campingFacilitiesDTOList = objectMapper.readValue(
-                    itemsNode.toString(), new TypeReference<List<CampingFacilitiesDTO>>() {}
-            );
-
-        } catch (JsonProcessingException e) {
-            log.error("json 데이터");
-            throw new RuntimeException(e);
-        }
-
-        return List.of();
-    }
-
-    @Override
-    public CampingEntity convertDTOToEntity(CampingDTO campingDTO) {
         CampingEntity campingEntity = new CampingEntity();
 
+        campingEntity.setCampId(campingDTO.getCampId());
         campingEntity.setCampName(campingDTO.getCampName());
         campingEntity.setLineIntro(campingDTO.getLineIntro());
         campingEntity.setIntro(campingDTO.getIntro());
@@ -117,27 +114,88 @@ public class CampingApiServiceImpl implements CampingApiService {
         campingEntity.setAddr(campingDTO.getAddr());
         campingEntity.setAddr(campingDTO.getAddrDetails());
         campingEntity.setMapX(campingDTO.getMapX());
-        campingEntity.setMapX(campingDTO.getMapY());
+        campingEntity.setMapY(campingDTO.getMapY());
         campingEntity.setTel(campingDTO.getTel());
         campingEntity.setHomepage(campingDTO.getHomepage());
         campingEntity.setStaffCount(campingDTO.getStaffCount());
         campingEntity.setCreatedDate(campingDTO.getCreatedDate());
         campingEntity.setLastModifiedDate(campingDTO.getModifiedDate());
+        campingEntity.setGeneralSiteCnt(campingDTO.getGeneral_site_cnt());
+        campingEntity.setCarSiteCnt(campingDTO.getCar_site_cnt());
+        campingEntity.setGlampingSiteCnt(campingDTO.getGlamping_site_cnt());
+        campingEntity.setCaravanSiteCnt(campingDTO.getCaravan_site_cnt());
+        campingEntity.setPersonalCaravanSiteCnt(campingDTO.getPersonal_caravan_site_cnt());
+        campingEntity.setSupportFacilities(campingDTO.getSupportFacilities());
+        campingEntity.setOutdoorActivities(campingDTO.getOutdoorActivities());
+        campingEntity.setPetAccess(campingDTO.getPetAccess());
+        campingEntity.setRentalGearList(campingDTO.getRentalGearList());
+        campingEntity.setOperationDay(campingDTO.getOperationDay());
 
         return campingEntity;
     }
 
-    @Override
-    public void saveCampingList(List<CampingDTO> campingDTOList) {
+    private List<CampingFacilitiesEntity> checkCampFacsType(CampingEntity campingEntity, GoCampingDTO campingDTO, int index) {
+        List<CampingFacilitiesEntity> facilities = new ArrayList<>();
 
-        List<CampingEntity> campingEntityList = campingDTOList.stream()
-                .map(this::convertDTOToEntity)
-                .collect(Collectors.toList());
+        if (campingDTO.getGeneral_site_cnt() > 0) {
+            facilities.add(
+                    createFacility(campingEntity, campingDTO, 1, index)); // 1, 일반야영장
+        }
+        if (campingDTO.getCar_site_cnt() > 0) {
+            facilities.add(
+                    createFacility(campingEntity, campingDTO, 2, index)); // 2, 자동차 야영장
+        }
+        if (campingDTO.getGlamping_site_cnt() > 0) {
+            facilities.add(
+                    createFacility(campingEntity, campingDTO, 3, index)); // 3, 글램핑
+        }
+        if (campingDTO.getCaravan_site_cnt() > 0) {
+            facilities.add(
+                    createFacility(campingEntity, campingDTO, 4, index)); // 4, 카라반
+        }
+        if (campingDTO.getPersonal_caravan_site_cnt() > 0) {
+            facilities.add(
+                    createFacility(campingEntity, campingDTO, 5, index)); // 5, 개인카라반
+        }
 
-        campingRepository.saveAll(campingEntityList);
+        return facilities;
     }
 
-    private void saveCampingFacilitiesList(List<CampingFacilitiesDTO> CampingFacilitiesDTOList) {
+    private CampingFacilitiesEntity createFacility(CampingEntity camping, GoCampingDTO campingDTO, int facsTypeId, int index) {
 
+        CampingFacilitiesEntity facilitiesEntity = new CampingFacilitiesEntity();
+
+        facilitiesEntity.setCampFacsId(index);
+        facilitiesEntity.setCampingEntity(camping);
+        facilitiesEntity.setInternalFacilitiesList(campingDTO.getInternalFacilitiesList());
+        facilitiesEntity.setToiletCnt(campingDTO.getToiletCnt());
+        facilitiesEntity.setShowerRoomCnt(campingDTO.getShowerRoomCnt());
+        facilitiesEntity.setSinkCnt(campingDTO.getSinkCnt());
+        facilitiesEntity.setBrazierClass(campingDTO.getBrazierClass());
+        facilitiesEntity.setFirstImageUrl(campingDTO.getFirstImageUrl());
+        facilitiesEntity.setPersonalTrailerStatus(campingDTO.getPersonalTrailerStatus());
+        facilitiesEntity.setPersonalCaravanStatus(campingDTO.getPersonalCaravanStatus());
+        facilitiesEntity.setFacsTypeId(facsTypeId);
+
+        return facilitiesEntity;
+    }
+
+    @Override
+    public List<GoCampingDTO> parseToDTO() {
+
+        String campingData = callCampingApi();
+
+        JsonNode rootNode = null;
+        try {
+            rootNode = objectMapper.readTree(campingData);
+            JsonNode itemsNode = rootNode.path("response").path("body").path("items").path("item");
+
+            List<GoCampingDTO> campingDTOList = objectMapper.convertValue(itemsNode, new TypeReference<List<GoCampingDTO>>() {});
+
+            return campingDTOList;
+
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

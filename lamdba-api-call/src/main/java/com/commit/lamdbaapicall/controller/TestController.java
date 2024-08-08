@@ -1,13 +1,11 @@
 package com.commit.lamdbaapicall.controller;
 
-import com.commit.lamdbaapicall.dto.CampingDTO;
-import com.commit.lamdbaapicall.entity.CampingEntity;
+import com.commit.lamdbaapicall.dto.GoCampingDTO;
 import com.commit.lamdbaapicall.service.CampingApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,15 +20,11 @@ public class TestController {
 
     @GetMapping("/call")
     public String call() {
-        String campingData = campingApiService.callCampingApi();
-
-        return campingData;
+        return campingApiService.callCampingApi();
     }
 
     @GetMapping("/parse")
-    public List<CampingDTO> test() {
-        List<CampingDTO> campingData = campingApiService.parseCampingList();
-
-        return campingData;
+    public List<GoCampingDTO> parse() {
+        return campingApiService.parseToDTO();
     }
 }
